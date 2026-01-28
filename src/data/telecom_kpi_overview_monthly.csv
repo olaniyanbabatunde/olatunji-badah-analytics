@@ -1,3 +1,9 @@
 month,region,uptime_pct,uptime_target_pct,uptime_delta_vs_target,uptime_delta_vs_last_month,sla_status,risk_level
+2024-10,North,99.6,99.5,0.1,0.2,healthy,low
+2024-10,South,99.8,99.5,0.3,0.1,healthy,low
+2024-11,North,99.5,99.5,0.0,-0.1,healthy,low
+2024-11,South,99.7,99.5,0.2,-0.1,healthy,low
+2024-12,North,99.4,99.5,-0.1,-0.1,warning,low
+2024-12,South,99.6,99.5,0.1,-0.1,healthy,low
 2025-01,North,99.2,99.5,-0.3,-0.2,warning,medium
 2025-01,South,99.7,99.5,0.2,0.1,healthy,low
