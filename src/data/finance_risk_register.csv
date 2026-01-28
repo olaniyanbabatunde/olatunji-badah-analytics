@@ -1,3 +1,17 @@
 month,risk_area,risk_level,driver,recommended_action
+2024-10,Liquidity,low,Stable cash positions,Maintain current monitoring
+2024-10,Operational,low,Normal processing volumes,Continue standard controls
+2024-10,Credit,low,Strong counterparty ratings,Monitor quarterly
+2024-10,Market,medium,Elevated volatility,Increase hedging positions
+2024-11,Liquidity,low,Healthy settlement flows,Maintain current monitoring
+2024-11,Operational,low,Stable processing volumes,Continue standard controls
+2024-11,Credit,low,Counterparty stability,Monitor quarterly
+2024-11,Market,low,Volatility normalized,Reduce hedging costs
+2024-12,Liquidity,medium,Year-end settlement spikes,Increase liquidity buffer
+2024-12,Operational,low,Stable processing volumes,Maintain current controls
+2024-12,Credit,medium,Counterparty downgrade,Increase collateral requirements
+2024-12,Market,low,Stable conditions,Maintain positions
 2025-01,Liquidity,medium,Delayed settlements,Increase monitoring of clearing timelines
 2025-01,Operational,low,Stable processing volumes,Maintain current controls
+2025-01,Credit,low,Improved counterparty outlook,Return to standard monitoring
+2025-01,Market,low,Low volatility regime,Optimize hedging costs
