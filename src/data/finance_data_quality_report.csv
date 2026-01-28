@@ -1,0 +1,3 @@
+dataset_name,month,completeness_pct,validity_pct,timeliness_score,overall_trust_score,quality_status
+transactions,2025-01,96.4,97.1,88,92,fair
+customer_master,2025-01,99.1,98.8,95,97,good
