@@ -1,12 +1,67 @@
+import { useState, useMemo } from "react";
 import { financeRiskData } from "@/lib/data";
 import MetricCard from "@/components/MetricCard";
 import StatusBadge from "@/components/StatusBadge";
+import MonthSelector from "@/components/MonthSelector";
 import { AlertTriangle, CheckCircle, Info } from "lucide-react";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Legend,
+  BarChart,
+  Bar,
+  Cell,
+} from "recharts";
 
 const FinanceRiskDashboard = () => {
-  const mediumRisks = financeRiskData.filter((r) => r.risk_level === "medium").length;
-  const lowRisks = financeRiskData.filter((r) => r.risk_level === "low").length;
-  const highRisks = financeRiskData.filter((r) => r.risk_level === "high").length;
+  const months = useMemo(() => {
+    return [...new Set(financeRiskData.map((d) => d.month))].sort();
+  }, []);
+
+  const [selectedMonth, setSelectedMonth] = useState(months[months.length - 1]);
+
+  const filteredData = useMemo(() => {
+    return financeRiskData.filter((d) => d.month === selectedMonth);
+  }, [selectedMonth]);
+
+  const mediumRisks = filteredData.filter((r) => r.risk_level === "medium").length;
+  const lowRisks = filteredData.filter((r) => r.risk_level === "low").length;
+  const highRisks = filteredData.filter((r) => r.risk_level === "high").length;
+
+  // Trend data for risk level changes
+  const trendData = useMemo(() => {
+    return months.map((month) => {
+      const monthData = financeRiskData.filter((d) => d.month === month);
+      return {
+        month,
+        high: monthData.filter((d) => d.risk_level === "high").length,
+        medium: monthData.filter((d) => d.risk_level === "medium").length,
+        low: monthData.filter((d) => d.risk_level === "low").length,
+      };
+    });
+  }, [months]);
+
+  // Risk area trend
+  const riskAreaTrend = useMemo(() => {
+    const areas = [...new Set(financeRiskData.map((d) => d.risk_area))];
+    return months.map((month) => {
+      const entry: Record<string, any> = { month };
+      areas.forEach((area) => {
+        const record = financeRiskData.find(
+          (d) => d.month === month && d.risk_area === area
+        );
+        // Convert risk level to numeric for trend visualization
+        const levelMap: Record<string, number> = { low: 1, medium: 2, high: 3 };
+        entry[area] = record ? levelMap[record.risk_level] : 0;
+      });
+      return entry;
+    });
+  }, [months]);
 
   const getRiskIcon = (level: string) => {
     switch (level) {
@@ -19,8 +74,34 @@ const FinanceRiskDashboard = () => {
     }
   };
 
+  const formatMonth = (month: string) => {
+    const [year, monthNum] = month.split("-");
+    const date = new Date(parseInt(year), parseInt(monthNum) - 1);
+    return date.toLocaleDateString("en-US", { month: "short" });
+  };
+
+  const getBarColor = (riskLevel: string) => {
+    switch (riskLevel) {
+      case "high":
+        return "hsl(0, 70%, 55%)";
+      case "medium":
+        return "hsl(38, 90%, 50%)";
+      default:
+        return "hsl(145, 60%, 40%)";
+    }
+  };
+
   return (
     <div className="space-y-8">
+      {/* Month Selector */}
+      <div className="flex justify-end">
+        <MonthSelector
+          months={months}
+          selectedMonth={selectedMonth}
+          onMonthChange={setSelectedMonth}
+        />
+      </div>
+
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
         <MetricCard
@@ -40,9 +121,84 @@ const FinanceRiskDashboard = () => {
         />
       </div>
 
+      {/* Risk Level Trend */}
+      <div className="bg-card p-6 rounded-lg border border-border">
+        <h3 className="text-lg font-semibold text-foreground mb-6">
+          Risk Level Distribution Over Time
+        </h3>
+        <div className="h-64">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={trendData}>
+              <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
+              <XAxis
+                dataKey="month"
+                tickFormatter={formatMonth}
+                className="text-muted-foreground text-xs"
+              />
+              <YAxis className="text-muted-foreground text-xs" />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: "hsl(var(--card))",
+                  border: "1px solid hsl(var(--border))",
+                  borderRadius: "0.5rem",
+                }}
+                labelFormatter={(label) => formatMonth(label as string)}
+              />
+              <Legend />
+              <Bar dataKey="high" stackId="a" fill="hsl(0, 70%, 55%)" name="High" />
+              <Bar dataKey="medium" stackId="a" fill="hsl(38, 90%, 50%)" name="Medium" />
+              <Bar dataKey="low" stackId="a" fill="hsl(145, 60%, 40%)" name="Low" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      {/* Risk Area Status Chart */}
+      <div className="bg-card p-6 rounded-lg border border-border">
+        <h3 className="text-lg font-semibold text-foreground mb-6">
+          Current Risk Status by Area
+        </h3>
+        <div className="h-48">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={filteredData} layout="vertical">
+              <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
+              <XAxis type="number" domain={[0, 3]} hide />
+              <YAxis
+                type="category"
+                dataKey="risk_area"
+                className="text-muted-foreground text-xs"
+                width={100}
+              />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: "hsl(var(--card))",
+                  border: "1px solid hsl(var(--border))",
+                  borderRadius: "0.5rem",
+                }}
+                formatter={(value: number) => {
+                  const levels = ["", "Low", "Medium", "High"];
+                  return [levels[value], "Risk Level"];
+                }}
+              />
+              <Bar
+                dataKey={(d) => {
+                  const levelMap: Record<string, number> = { low: 1, medium: 2, high: 3 };
+                  return levelMap[d.risk_level];
+                }}
+                radius={[0, 4, 4, 0]}
+              >
+                {filteredData.map((entry, index) => (
+                  <Cell key={index} fill={getBarColor(entry.risk_level)} />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
       {/* Risk Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {financeRiskData.map((risk, index) => (
+        {filteredData.map((risk, index) => (
           <div
             key={index}
             className={`bg-card p-6 rounded-lg border-l-4 ${
@@ -102,7 +258,7 @@ const FinanceRiskDashboard = () => {
               </tr>
             </thead>
             <tbody>
-              {financeRiskData.map((row, index) => (
+              {filteredData.map((row, index) => (
                 <tr key={index} className="border-b border-border last:border-0">
                   <td className="py-3 px-4 font-medium text-foreground">
                     {row.risk_area}
@@ -127,10 +283,10 @@ const FinanceRiskDashboard = () => {
           What This Means
         </h3>
         <p className="text-muted-foreground mb-4">
-          The risk profile shows one medium-level concern in Liquidity driven by delayed 
-          settlements. While operational risk remains low due to stable processing volumes, 
-          the liquidity situation requires active monitoring to prevent escalation that could 
-          impact capital allocation decisions.
+          The historical view reveals that risk levels fluctuate month-to-month. December 2024 
+          showed elevated risk in both Liquidity and Credit areas due to year-end pressures. 
+          While Credit risk has normalized, Liquidity remains at medium due to ongoing settlement 
+          delays requiring active monitoring.
         </p>
         <h4 className="font-semibold text-foreground mb-2">Recommended Actions</h4>
         <ul className="space-y-2 text-muted-foreground">
