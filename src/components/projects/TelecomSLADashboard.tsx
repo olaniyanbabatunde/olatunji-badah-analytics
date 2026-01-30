@@ -1,8 +1,6 @@
-import { useState, useMemo } from "react";
 import { telecomKPIData } from "@/lib/data";
 import MetricCard from "@/components/MetricCard";
 import StatusBadge from "@/components/StatusBadge";
-import MonthSelector from "@/components/MonthSelector";
 import {
   BarChart,
   Bar,
@@ -12,44 +10,15 @@ import {
   Tooltip,
   ResponsiveContainer,
   Cell,
-  LineChart,
-  Line,
-  Legend,
 } from "recharts";
 
 const TelecomSLADashboard = () => {
-  const months = useMemo(() => {
-    return [...new Set(telecomKPIData.map((d) => d.month))].sort();
-  }, []);
-
-  const [selectedMonth, setSelectedMonth] = useState(months[months.length - 1]);
-
-  const filteredData = useMemo(() => {
-    return telecomKPIData.filter((d) => d.month === selectedMonth);
-  }, [selectedMonth]);
-
-  const chartData = filteredData.map((d) => ({
+  const chartData = telecomKPIData.map((d) => ({
     region: d.region,
     uptime: d.uptime_pct,
     target: d.uptime_target_pct,
     status: d.sla_status,
   }));
-
-  // Trend data for line chart
-  const trendData = useMemo(() => {
-    const regions = [...new Set(telecomKPIData.map((d) => d.region))];
-    return months.map((month) => {
-      const entry: Record<string, any> = { month };
-      regions.forEach((region) => {
-        const record = telecomKPIData.find(
-          (d) => d.month === month && d.region === region
-        );
-        entry[region] = record?.uptime_pct || null;
-      });
-      entry.target = telecomKPIData.find((d) => d.month === month)?.uptime_target_pct;
-      return entry;
-    });
-  }, [months]);
 
   const getBarColor = (status: string) => {
     switch (status) {
@@ -62,26 +31,11 @@ const TelecomSLADashboard = () => {
     }
   };
 
-  const formatMonth = (month: string) => {
-    const [year, monthNum] = month.split("-");
-    const date = new Date(parseInt(year), parseInt(monthNum) - 1);
-    return date.toLocaleDateString("en-US", { month: "short" });
-  };
-
   return (
     <div className="space-y-8">
-      {/* Month Selector */}
-      <div className="flex justify-end">
-        <MonthSelector
-          months={months}
-          selectedMonth={selectedMonth}
-          onMonthChange={setSelectedMonth}
-        />
-      </div>
-
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {filteredData.map((kpi, index) => (
+        {telecomKPIData.map((kpi, index) => (
           <MetricCard
             key={index}
             title={`${kpi.region} Region Uptime`}
@@ -95,67 +49,10 @@ const TelecomSLADashboard = () => {
         ))}
       </div>
 
-      {/* Trend Chart */}
+      {/* Chart */}
       <div className="bg-card p-6 rounded-lg border border-border">
         <h3 className="text-lg font-semibold text-foreground mb-6">
-          Uptime Trend Over Time
-        </h3>
-        <div className="h-64">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={trendData}>
-              <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
-              <XAxis
-                dataKey="month"
-                tickFormatter={formatMonth}
-                className="text-muted-foreground text-xs"
-              />
-              <YAxis
-                domain={[98.5, 100]}
-                tickFormatter={(v) => `${v}%`}
-                className="text-muted-foreground text-xs"
-              />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "hsl(var(--card))",
-                  border: "1px solid hsl(var(--border))",
-                  borderRadius: "0.5rem",
-                }}
-                formatter={(value: number) => [`${value}%`]}
-                labelFormatter={(label) => formatMonth(label as string)}
-              />
-              <Legend />
-              <Line
-                type="monotone"
-                dataKey="North"
-                stroke="hsl(220, 60%, 50%)"
-                strokeWidth={2}
-                dot={{ r: 4 }}
-              />
-              <Line
-                type="monotone"
-                dataKey="South"
-                stroke="hsl(145, 60%, 40%)"
-                strokeWidth={2}
-                dot={{ r: 4 }}
-              />
-              <Line
-                type="monotone"
-                dataKey="target"
-                stroke="hsl(var(--muted-foreground))"
-                strokeWidth={1}
-                strokeDasharray="5 5"
-                dot={false}
-                name="Target"
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-
-      {/* Bar Chart */}
-      <div className="bg-card p-6 rounded-lg border border-border">
-        <h3 className="text-lg font-semibold text-foreground mb-6">
-          Regional Uptime vs Target ({formatMonth(selectedMonth)})
+          Regional Uptime vs Target
         </h3>
         <div className="h-64">
           <ResponsiveContainer width="100%" height="100%">
@@ -220,7 +117,7 @@ const TelecomSLADashboard = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredData.map((row, index) => (
+              {telecomKPIData.map((row, index) => (
                 <tr key={index} className="border-b border-border last:border-0">
                   <td className="py-3 px-4 font-medium text-foreground">
                     {row.region}
@@ -260,10 +157,10 @@ const TelecomSLADashboard = () => {
           What This Means
         </h3>
         <p className="text-muted-foreground mb-4">
-          The trend analysis reveals declining uptime in the North region over the past 4 months, 
-          dropping from 99.6% to 99.2%. This downward trajectory now breaches the SLA target, 
-          indicating systemic issues requiring immediate attention. The South region remains 
-          stable and within healthy parameters.
+          The North region is currently operating below SLA targets (-0.3% vs target), 
+          indicating medium risk. Immediate attention is required to prevent SLA breach 
+          penalties and maintain customer satisfaction. The South region is performing 
+          within healthy parameters.
         </p>
         <h4 className="font-semibold text-foreground mb-2">Recommended Actions</h4>
         <ul className="space-y-2 text-muted-foreground">

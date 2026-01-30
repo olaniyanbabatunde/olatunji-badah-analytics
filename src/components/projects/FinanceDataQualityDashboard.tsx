@@ -1,8 +1,6 @@
-import { useState, useMemo } from "react";
 import { financeDataQualityData } from "@/lib/data";
 import MetricCard from "@/components/MetricCard";
 import StatusBadge from "@/components/StatusBadge";
-import MonthSelector from "@/components/MonthSelector";
 import {
   RadarChart,
   Radar,
@@ -16,74 +14,22 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  LineChart,
-  Line,
-  Legend,
 } from "recharts";
 
 const FinanceDataQualityDashboard = () => {
-  const months = useMemo(() => {
-    return [...new Set(financeDataQualityData.map((d) => d.month))].sort();
-  }, []);
-
-  const [selectedMonth, setSelectedMonth] = useState(months[months.length - 1]);
-
-  const filteredData = useMemo(() => {
-    return financeDataQualityData.filter((d) => d.month === selectedMonth);
-  }, [selectedMonth]);
-
   const avgTrustScore =
-    filteredData.reduce((sum, d) => sum + d.overall_trust_score, 0) /
-    (filteredData.length || 1);
+    financeDataQualityData.reduce((sum, d) => sum + d.overall_trust_score, 0) /
+    financeDataQualityData.length;
 
-  const qualityIssues = filteredData.filter(
-    (d) => d.quality_status === "warning" || d.quality_status === "fair"
-  ).length;
-
-  // Trend data for line chart
-  const trendData = useMemo(() => {
-    const datasets = [...new Set(financeDataQualityData.map((d) => d.dataset_name))];
-    return months.map((month) => {
-      const entry: Record<string, any> = { month };
-      datasets.forEach((dataset) => {
-        const record = financeDataQualityData.find(
-          (d) => d.month === month && d.dataset_name === dataset
-        );
-        entry[dataset] = record?.overall_trust_score || null;
-      });
-      return entry;
-    });
-  }, [months]);
-
-  const formatMonth = (month: string) => {
-    const [year, monthNum] = month.split("-");
-    const date = new Date(parseInt(year), parseInt(monthNum) - 1);
-    return date.toLocaleDateString("en-US", { month: "short" });
-  };
-
-  const formatDatasetName = (name: string) => {
-    return name.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
-  };
-
-  const DATASET_COLORS: Record<string, string> = {
-    transactions: "hsl(38, 90%, 50%)",
-    customer_master: "hsl(145, 60%, 40%)",
-    accounts_payable: "hsl(0, 70%, 55%)",
-    market_data: "hsl(220, 60%, 50%)",
-    regulatory_reports: "hsl(280, 60%, 50%)",
-  };
+  const radarData = financeDataQualityData.map((d) => ({
+    dataset: d.dataset_name,
+    Completeness: d.completeness_pct,
+    Validity: d.validity_pct,
+    Timeliness: d.timeliness_score,
+  }));
 
   return (
     <div className="space-y-8">
-      {/* Month Selector */}
-      <div className="flex justify-end">
-        <MonthSelector
-          months={months}
-          selectedMonth={selectedMonth}
-          onMonthChange={setSelectedMonth}
-        />
-      </div>
-
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
         <MetricCard
@@ -94,57 +40,14 @@ const FinanceDataQualityDashboard = () => {
         />
         <MetricCard
           title="Datasets Monitored"
-          value={filteredData.length}
+          value={financeDataQualityData.length}
           status="healthy"
         />
         <MetricCard
           title="Quality Issues"
-          value={qualityIssues}
-          status={qualityIssues > 2 ? "risk" : qualityIssues > 0 ? "warning" : "healthy"}
+          value="1"
+          status="warning"
         />
-      </div>
-
-      {/* Trust Score Trend */}
-      <div className="bg-card p-6 rounded-lg border border-border">
-        <h3 className="text-lg font-semibold text-foreground mb-6">
-          Trust Score Trend by Dataset
-        </h3>
-        <div className="h-72">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={trendData}>
-              <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
-              <XAxis
-                dataKey="month"
-                tickFormatter={formatMonth}
-                className="text-muted-foreground text-xs"
-              />
-              <YAxis
-                domain={[80, 100]}
-                className="text-muted-foreground text-xs"
-              />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "hsl(var(--card))",
-                  border: "1px solid hsl(var(--border))",
-                  borderRadius: "0.5rem",
-                }}
-                labelFormatter={(label) => formatMonth(label as string)}
-                formatter={(value: number, name: string) => [value, formatDatasetName(name)]}
-              />
-              <Legend formatter={formatDatasetName} />
-              {Object.keys(DATASET_COLORS).map((dataset) => (
-                <Line
-                  key={dataset}
-                  type="monotone"
-                  dataKey={dataset}
-                  stroke={DATASET_COLORS[dataset]}
-                  strokeWidth={2}
-                  dot={{ r: 3 }}
-                />
-              ))}
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
       </div>
 
       {/* Charts */}
@@ -156,13 +59,11 @@ const FinanceDataQualityDashboard = () => {
           </h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={filteredData}>
+              <BarChart data={financeDataQualityData}>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
                 <XAxis
                   dataKey="dataset_name"
                   className="text-muted-foreground text-xs"
-                  tickFormatter={formatDatasetName}
-                  tick={{ fontSize: 10 }}
                 />
                 <YAxis
                   domain={[80, 100]}
@@ -175,7 +76,6 @@ const FinanceDataQualityDashboard = () => {
                     borderRadius: "0.5rem",
                   }}
                   formatter={(value: number) => [`${value}`, "Trust Score"]}
-                  labelFormatter={formatDatasetName}
                 />
                 <Bar
                   dataKey="overall_trust_score"
@@ -194,13 +94,11 @@ const FinanceDataQualityDashboard = () => {
           </h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
-              <RadarChart data={filteredData}>
+              <RadarChart data={financeDataQualityData}>
                 <PolarGrid className="stroke-border" />
                 <PolarAngleAxis
                   dataKey="dataset_name"
                   className="text-muted-foreground text-xs"
-                  tickFormatter={formatDatasetName}
-                  tick={{ fontSize: 9 }}
                 />
                 <PolarRadiusAxis
                   domain={[80, 100]}
@@ -263,10 +161,10 @@ const FinanceDataQualityDashboard = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredData.map((row, index) => (
+              {financeDataQualityData.map((row, index) => (
                 <tr key={index} className="border-b border-border last:border-0">
                   <td className="py-3 px-4 font-medium text-foreground capitalize">
-                    {formatDatasetName(row.dataset_name)}
+                    {row.dataset_name.replace("_", " ")}
                   </td>
                   <td className="py-3 px-4 text-foreground">
                     {row.completeness_pct}%
@@ -294,10 +192,10 @@ const FinanceDataQualityDashboard = () => {
           What This Means
         </h3>
         <p className="text-muted-foreground mb-4">
-          The trend analysis shows consistent improvement across all datasets over the 4-month 
-          period. Market data maintains excellent quality (99), while accounts payable shows the 
-          most improvement, rising from 84 to 89. Transactions and accounts payable remain areas 
-          requiring attention to meet the 95+ trust score threshold for regulatory confidence.
+          The customer_master dataset maintains excellent quality (97/100 trust score), 
+          while the transactions dataset requires attention with a timeliness score of 88, 
+          pulling the overall trust score down to 92 ("fair"). This delay in transaction 
+          data availability could impact regulatory reporting timelines.
         </p>
         <h4 className="font-semibold text-foreground mb-2">Recommended Actions</h4>
         <ul className="space-y-2 text-muted-foreground">
@@ -311,7 +209,7 @@ const FinanceDataQualityDashboard = () => {
           </li>
           <li className="flex items-start gap-2">
             <span className="w-1.5 h-1.5 bg-primary rounded-full mt-2" />
-            Prioritize accounts payable for next audit cycle review
+            Prioritize transactions dataset for next audit cycle review
           </li>
         </ul>
       </div>

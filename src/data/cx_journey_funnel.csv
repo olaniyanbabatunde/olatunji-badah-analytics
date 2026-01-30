@@ -1,17 +1,5 @@
-month,stage,users,dropoff_pct
-2024-10,Signup,980,0.0
-2024-10,First Activity,686,30.0
-2024-10,Subscription,402,41.4
-2024-10,Retention (30d),305,24.1
-2024-11,Signup,1050,0.0
-2024-11,First Activity,756,28.0
-2024-11,Subscription,462,38.9
-2024-11,Retention (30d),355,23.2
-2024-12,Signup,1120,0.0
-2024-12,First Activity,817,27.1
-2024-12,Subscription,506,38.1
-2024-12,Retention (30d),389,23.1
-2025-01,Signup,1200,0.0
-2025-01,First Activity,860,28.3
-2025-01,Subscription,540,37.2
-2025-01,Retention (30d),410,24.1
+stage,users,dropoff_pct
+Signup,1200,0.0
+First Activity,860,28.3
+Subscription,540,37.2
+Retention (30d),410,24.1
