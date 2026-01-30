@@ -3,18 +3,18 @@ import { ArrowLeft, Users, Target, AlertTriangle, CheckCircle } from "lucide-rea
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { getProjectById } from "@/lib/data";
-import TelecomSLADashboard from "@/components/projects/TelecomSLADashboard";
-import TelecomChurnDashboard from "@/components/projects/TelecomChurnDashboard";
-import FinanceDataQualityDashboard from "@/components/projects/FinanceDataQualityDashboard";
-import FinanceRiskDashboard from "@/components/projects/FinanceRiskDashboard";
-import CXJourneyDashboard from "@/components/projects/CXJourneyDashboard";
+import NetworkBillingDashboard from "@/components/projects/NetworkBillingDashboard";
+import RevenueRiskDashboard from "@/components/projects/RevenueRiskDashboard";
+import RevenueLeakageDashboard from "@/components/projects/RevenueLeakageDashboard";
+import ControlFailuresDashboard from "@/components/projects/ControlFailuresDashboard";
+import SupportRetentionDashboard from "@/components/projects/SupportRetentionDashboard";
 
 const dashboardComponents: Record<string, React.ComponentType> = {
-  "telecom-sla-intelligence": TelecomSLADashboard,
-  "telecom-churn-risk": TelecomChurnDashboard,
-  "finance-data-governance": FinanceDataQualityDashboard,
-  "finance-risk-warning": FinanceRiskDashboard,
-  "cx-journey-retention": CXJourneyDashboard,
+  "telecom-network-billing": NetworkBillingDashboard,
+  "telecom-revenue-risk": RevenueRiskDashboard,
+  "finance-revenue-leakage": RevenueLeakageDashboard,
+  "finance-control-failures": ControlFailuresDashboard,
+  "cx-support-retention": SupportRetentionDashboard,
 };
 
 const ProjectPage = () => {
