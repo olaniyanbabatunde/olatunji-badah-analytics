@@ -1,0 +1,13 @@
+month,billing_errors_count,error_rate_pct,avg_error_loss_usd
+Jan,85,4.2,1.1
+Feb,90,4.6,1.2
+Mar,110,5.5,1.3
+Apr,120,5.9,1.4
+May,140,6.3,1.6
+Jun,135,6.0,1.5
+Jul,128,5.7,1.4
+Aug,122,5.4,1.4
+Sep,118,5.1,1.3
+Oct,105,4.8,1.2
+Nov,98,4.5,1.1
+Dec,95,4.4,1.1

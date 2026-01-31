@@ -1,44 +1,28 @@
-import { Download, Briefcase, GraduationCap, Award } from "lucide-react";
+import { FileText, TrendingUp, Shield, Users, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const About = () => {
-  const experience = [
+  const capabilities = [
     {
-      role: "Data & Performance Analyst",
-      company: "Neueda Ltd",
-      period: "May 2023 – Present",
-      highlights: [
-        "Engineered SQL-based pipelines reducing manual processing by 60%",
-        "Developed AI-driven Power BI dashboards for KPI tracking",
-        "Implemented data quality frameworks ensuring 99% accuracy",
-      ],
+      icon: TrendingUp,
+      title: "Performance Analytics",
+      description: "Monitoring service levels, operational efficiency, and KPI performance across enterprise systems with clear trend analysis and target tracking.",
     },
     {
-      role: "Data & Insight Support",
-      company: "BT Enterprise",
-      period: "Apr 2021 – Apr 2023",
-      highlights: [
-        "Processed datasets exceeding 100k records",
-        "Optimized database queries improving report speed by 40%",
-        "Supported audit and governance processes",
-      ],
+      icon: Shield,
+      title: "Risk & Data Quality",
+      description: "Identifying control failures, data quality gaps, and compliance risks before they impact business outcomes, with actionable remediation insights.",
     },
     {
-      role: "Customer Experience Analyst Lead",
-      company: "Tuteria Ltd",
-      period: "Aug 2017 – Jul 2021",
-      highlights: [
-        "Built data-driven systems reducing operational costs by 30%",
-        "Achieved $100k revenue through data-informed strategies",
-        "Onboarded 1,200+ learners in first year",
-      ],
+      icon: Users,
+      title: "Customer & Operational Insights",
+      description: "Translating customer journey data and operational metrics into retention strategies and process improvements that drive measurable value.",
     },
-  ];
-
-  const skills = [
-    { category: "Analytics", items: ["SQL", "Python", "Excel/VBA", "Power BI", "DAX"] },
-    { category: "Governance", items: ["Data Quality", "GDPR", "Audit & Compliance", "Risk Monitoring"] },
-    { category: "AI & ML", items: ["LLM Integration", "Prompt Engineering", "Automated Insights"] },
+    {
+      icon: BarChart3,
+      title: "Data Storytelling for Decision-Makers",
+      description: "Presenting complex analysis in executive-friendly formats that support informed decision-making, not just data display.",
+    },
   ];
 
   return (
@@ -51,79 +35,77 @@ const About = () => {
               About
             </p>
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
-              Enterprise Analytics Professional
+              Data Analyst – Performance, Risk & Decision Intelligence
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Progressive expertise in data analytics, AI engineering, and performance intelligence 
-              across regulated industries. Translating complex data into actionable insights for 
-              senior stakeholders.
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              Experienced delivering analytics across Telecommunications, Financial Services, 
+              and Customer Experience — and adaptable to new domains and problem spaces. 
+              I focus on turning data into clear, actionable insights that support real business decisions.
             </p>
           </div>
 
-          {/* Experience timeline */}
+          {/* Capability Cards */}
           <div className="mb-16">
-            <div className="flex items-center gap-2 mb-8">
-              <Briefcase className="h-5 w-5 text-primary" />
-              <h3 className="text-xl font-semibold text-foreground">Experience</h3>
-            </div>
-            <div className="space-y-6">
-              {experience.map((exp, index) => (
+            <h3 className="text-xl font-semibold text-foreground mb-8 text-center">
+              What I Deliver
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {capabilities.map((capability, index) => (
                 <div
                   key={index}
-                  className="relative pl-6 border-l-2 border-border hover:border-primary transition-colors"
+                  className="bg-card p-6 rounded-lg border border-border hover:border-primary/50 transition-colors"
                 >
-                  <div className="absolute -left-[9px] top-0 w-4 h-4 bg-background border-2 border-primary rounded-full" />
-                  <div className="bg-card p-6 rounded-lg border border-border">
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
-                      <h4 className="font-semibold text-foreground">{exp.role}</h4>
-                      <span className="text-sm text-muted-foreground">{exp.period}</span>
+                  <div className="flex items-start gap-4">
+                    <div className="p-3 bg-primary/10 rounded-lg flex-shrink-0">
+                      <capability.icon className="h-6 w-6 text-primary" />
                     </div>
-                    <p className="text-primary font-medium text-sm mb-3">{exp.company}</p>
-                    <ul className="space-y-1">
-                      {exp.highlights.map((highlight, i) => (
-                        <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
-                          <span className="w-1 h-1 bg-primary rounded-full mt-2 flex-shrink-0" />
-                          {highlight}
-                        </li>
-                      ))}
-                    </ul>
+                    <div>
+                      <h4 className="font-semibold text-foreground mb-2">
+                        {capability.title}
+                      </h4>
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        {capability.description}
+                      </p>
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Skills */}
-          <div className="mb-12">
-            <div className="flex items-center gap-2 mb-8">
-              <Award className="h-5 w-5 text-primary" />
-              <h3 className="text-xl font-semibold text-foreground">Technical Skills</h3>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-              {skills.map((skill, index) => (
-                <div key={index} className="bg-card p-6 rounded-lg border border-border">
-                  <h4 className="font-semibold text-foreground mb-4">{skill.category}</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {skill.items.map((item, i) => (
-                      <span
-                        key={i}
-                        className="px-3 py-1 bg-secondary text-secondary-foreground text-sm rounded-full"
-                      >
-                        {item}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              ))}
+          {/* Approach Section */}
+          <div className="bg-card p-8 rounded-lg border border-border mb-12">
+            <h3 className="text-xl font-semibold text-foreground mb-4">
+              How I Work
+            </h3>
+            <div className="space-y-4 text-muted-foreground">
+              <p>
+                I approach analytics with a focus on clarity and business impact. Every metric 
+                should support a decision, and every dashboard should tell a story that stakeholders 
+                can act on without needing to interpret raw data themselves.
+              </p>
+              <p>
+                My experience spans regulated industries where data quality, governance, and 
+                compliance are non-negotiable. I understand the constraints of working with 
+                real-world data — messy, incomplete, and often spread across multiple systems.
+              </p>
+              <p>
+                The projects in this portfolio demonstrate how I think about analytics problems: 
+                from understanding business context, to structuring the right metrics, to 
+                presenting insights in ways that enable confident decision-making.
+              </p>
             </div>
           </div>
 
-          {/* CV Download */}
+          {/* CV Link */}
           <div className="text-center">
+            <p className="text-muted-foreground mb-4">
+              For detailed work experience, education, and technical skills:
+            </p>
             <Button asChild size="lg">
-              <a href="/cv/olatunji_badah.pdf" download>
-                <Download className="h-4 w-4 mr-2" />
-                Download Full CV
+              <a href="/cv/olatunji_badah.pdf" target="_blank" rel="noopener noreferrer">
+                <FileText className="h-4 w-4 mr-2" />
+                View Full CV (PDF)
               </a>
             </Button>
           </div>
