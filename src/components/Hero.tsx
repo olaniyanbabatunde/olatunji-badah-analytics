@@ -1,10 +1,10 @@
-import { ArrowDown, Download, BarChart3, Shield, Users } from "lucide-react";
+import { ArrowDown, FileText, BarChart3, Shield, Users, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Hero = () => {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background gradient */}
+      {/* Background pattern */}
       <div 
         className="absolute inset-0 opacity-[0.03]"
         style={{
@@ -14,7 +14,7 @@ const Hero = () => {
 
       <div className="section-container relative z-10 pt-20">
         <div className="max-w-4xl mx-auto text-center space-y-8">
-          {/* Name badge */}
+          {/* Status badge */}
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-secondary rounded-full text-sm font-medium text-secondary-foreground animate-fade-in">
             <span className="w-2 h-2 bg-status-healthy rounded-full animate-pulse" />
             Available for opportunities
@@ -25,27 +25,30 @@ const Hero = () => {
             Olatunji Badah
           </h1>
 
-          {/* Subtitle */}
+          {/* Subtitle - domain-flexible positioning */}
           <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed animate-slide-up" style={{ animationDelay: "0.1s" }}>
-            Data Analyst specialising in{" "}
-            <span className="text-foreground font-medium">performance intelligence</span>,{" "}
-            <span className="text-foreground font-medium">data governance</span>, and{" "}
-            <span className="text-foreground font-medium">customer experience</span>
+            Data Analyst turning{" "}
+            <span className="text-foreground font-medium">complex data into clear decisions</span>{" "}
+            for performance, risk, and customer intelligence
           </p>
 
-          {/* Industry pills */}
+          {/* Capability pills - NOT industries */}
           <div className="flex flex-wrap justify-center gap-3 animate-slide-up" style={{ animationDelay: "0.2s" }}>
             <div className="flex items-center gap-2 px-4 py-2 bg-card border border-border rounded-lg">
-              <BarChart3 className="h-4 w-4 text-primary" />
-              <span className="text-sm font-medium">Telecommunications</span>
+              <TrendingUp className="h-4 w-4 text-primary" />
+              <span className="text-sm font-medium">Performance Analytics</span>
             </div>
             <div className="flex items-center gap-2 px-4 py-2 bg-card border border-border rounded-lg">
               <Shield className="h-4 w-4 text-primary" />
-              <span className="text-sm font-medium">Financial Services</span>
+              <span className="text-sm font-medium">Risk & Data Quality</span>
             </div>
             <div className="flex items-center gap-2 px-4 py-2 bg-card border border-border rounded-lg">
               <Users className="h-4 w-4 text-primary" />
-              <span className="text-sm font-medium">Customer Experience</span>
+              <span className="text-sm font-medium">Customer Insights</span>
+            </div>
+            <div className="flex items-center gap-2 px-4 py-2 bg-card border border-border rounded-lg">
+              <BarChart3 className="h-4 w-4 text-primary" />
+              <span className="text-sm font-medium">Data Storytelling</span>
             </div>
           </div>
 
@@ -57,9 +60,9 @@ const Hero = () => {
               </a>
             </Button>
             <Button asChild variant="outline" size="lg" className="min-w-[180px]">
-              <a href="/cv/olatunji_badah.pdf" download>
-                <Download className="h-4 w-4 mr-2" />
-                Download CV
+              <a href="/cv/olatunji_badah.pdf" target="_blank" rel="noopener noreferrer">
+                <FileText className="h-4 w-4 mr-2" />
+                View CV (PDF)
               </a>
             </Button>
           </div>

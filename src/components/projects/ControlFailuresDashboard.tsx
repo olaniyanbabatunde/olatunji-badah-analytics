@@ -1,4 +1,4 @@
-import { financeRiskData } from "@/lib/data";
+import { financeRiskData, financeControlFailureTrends } from "@/lib/data";
 import MetricCard from "@/components/MetricCard";
 import StatusBadge from "@/components/StatusBadge";
 import { AlertTriangle, CheckCircle, Info } from "lucide-react";
@@ -10,6 +10,10 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  Legend,
+  ComposedChart,
+  Bar,
+  Area,
 } from "recharts";
 
 const ControlFailuresDashboard = () => {
@@ -18,13 +22,11 @@ const ControlFailuresDashboard = () => {
   const highRisks = financeRiskData.filter((r) => r.risk_level === "high").length;
   const totalRisks = financeRiskData.length;
 
-  // Risk trend data
-  const riskTrendData = [
-    { month: "Oct", high: 0, medium: 1, low: 2 },
-    { month: "Nov", high: 0, medium: 2, low: 1 },
-    { month: "Dec", high: 1, medium: 1, low: 1 },
-    { month: "Jan", high: 0, medium: 1, low: 1 },
-  ];
+  // Calculate totals from trend data
+  const totalFailures = financeControlFailureTrends.reduce((sum, d) => sum + d.control_failures, 0);
+  const currentMonth = financeControlFailureTrends[financeControlFailureTrends.length - 1];
+  const previousMonth = financeControlFailureTrends[financeControlFailureTrends.length - 2];
+  const failureDelta = currentMonth.control_failures - previousMonth.control_failures;
 
   const getRiskIcon = (level: string) => {
     switch (level) {
@@ -53,41 +55,53 @@ const ControlFailuresDashboard = () => {
       {/* Executive KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <MetricCard
-          title="Total Risk Items"
-          value={totalRisks}
-          status="neutral"
+          title="YTD Control Failures"
+          value={totalFailures}
+          status="warning"
         />
         <MetricCard
-          title="High Risk"
-          value={highRisks}
-          status={highRisks > 0 ? "risk" : "healthy"}
+          title="Dec Failures"
+          value={currentMonth.control_failures}
+          delta={failureDelta}
+          deltaLabel="vs Nov"
+          status={failureDelta > 0 ? "warning" : "healthy"}
         />
         <MetricCard
-          title="Medium Risk"
-          value={mediumRisks}
-          status={mediumRisks > 0 ? "warning" : "healthy"}
+          title="High Severity %"
+          value={currentMonth.high_severity_pct}
+          unit="%"
+          status={currentMonth.high_severity_pct > 35 ? "risk" : "warning"}
         />
         <MetricCard
-          title="Low Risk"
-          value={lowRisks}
-          status="healthy"
+          title="Avg Financial Impact"
+          value={`$${currentMonth.avg_financial_impact_usd}M`}
+          status="warning"
         />
       </div>
 
-      {/* Risk Trend Chart */}
+      {/* Control Failure Trend - from new dataset */}
       <div className="bg-card p-6 rounded-lg border border-border">
         <h3 className="text-lg font-semibold text-foreground mb-2">
-          Risk Level Trend
+          Control Failure Trend
         </h3>
         <p className="text-sm text-muted-foreground mb-6">
-          Monthly count of risk items by severity
+          Monthly failures and severity distribution
         </p>
         <div className="h-64">
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={riskTrendData}>
+            <ComposedChart data={financeControlFailureTrends}>
               <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
               <XAxis dataKey="month" className="text-muted-foreground text-xs" />
-              <YAxis className="text-muted-foreground text-xs" allowDecimals={false} />
+              <YAxis
+                yAxisId="left"
+                className="text-muted-foreground text-xs"
+              />
+              <YAxis
+                yAxisId="right"
+                orientation="right"
+                className="text-muted-foreground text-xs"
+                tickFormatter={(v) => `${v}%`}
+              />
               <Tooltip
                 contentStyle={{
                   backgroundColor: "hsl(var(--card))",
@@ -95,29 +109,60 @@ const ControlFailuresDashboard = () => {
                   borderRadius: "0.5rem",
                 }}
               />
+              <Legend />
+              <Bar
+                yAxisId="left"
+                dataKey="control_failures"
+                name="Control Failures"
+                fill="hsl(var(--primary))"
+                radius={[4, 4, 0, 0]}
+              />
               <Line
+                yAxisId="right"
                 type="monotone"
-                dataKey="high"
-                name="High Risk"
+                dataKey="high_severity_pct"
+                name="High Severity %"
                 stroke="hsl(var(--status-risk))"
                 strokeWidth={2}
-                dot={{ fill: "hsl(var(--status-risk))", strokeWidth: 2, r: 4 }}
+                dot={{ fill: "hsl(var(--status-risk))", strokeWidth: 2, r: 3 }}
               />
-              <Line
+            </ComposedChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      {/* Financial Impact Trend */}
+      <div className="bg-card p-6 rounded-lg border border-border">
+        <h3 className="text-lg font-semibold text-foreground mb-2">
+          Financial Impact Trend
+        </h3>
+        <p className="text-sm text-muted-foreground mb-6">
+          Average financial impact per control failure ($M)
+        </p>
+        <div className="h-48">
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={financeControlFailureTrends}>
+              <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
+              <XAxis dataKey="month" className="text-muted-foreground text-xs" />
+              <YAxis
+                className="text-muted-foreground text-xs"
+                tickFormatter={(v) => `$${v}M`}
+                domain={[1, 2]}
+              />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: "hsl(var(--card))",
+                  border: "1px solid hsl(var(--border))",
+                  borderRadius: "0.5rem",
+                }}
+                formatter={(value: number) => [`$${value}M`, "Avg Impact"]}
+              />
+              <Area
                 type="monotone"
-                dataKey="medium"
-                name="Medium Risk"
+                dataKey="avg_financial_impact_usd"
+                fill="hsl(var(--status-warning) / 0.2)"
                 stroke="hsl(var(--status-warning))"
                 strokeWidth={2}
-                dot={{ fill: "hsl(var(--status-warning))", strokeWidth: 2, r: 4 }}
-              />
-              <Line
-                type="monotone"
-                dataKey="low"
-                name="Low Risk"
-                stroke="hsl(var(--status-healthy))"
-                strokeWidth={2}
-                dot={{ fill: "hsl(var(--status-healthy))", strokeWidth: 2, r: 4 }}
               />
             </LineChart>
           </ResponsiveContainer>
@@ -155,6 +200,42 @@ const ControlFailuresDashboard = () => {
         </div>
       </div>
 
+      {/* Control Failure Details Table */}
+      <div className="bg-card p-6 rounded-lg border border-border">
+        <h3 className="text-lg font-semibold text-foreground mb-6">Monthly Control Failure Details</h3>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-border">
+                <th className="text-left py-3 px-4 font-medium text-muted-foreground">Month</th>
+                <th className="text-left py-3 px-4 font-medium text-muted-foreground">Failures</th>
+                <th className="text-left py-3 px-4 font-medium text-muted-foreground">High Severity %</th>
+                <th className="text-left py-3 px-4 font-medium text-muted-foreground">Avg Impact</th>
+                <th className="text-left py-3 px-4 font-medium text-muted-foreground">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {financeControlFailureTrends.slice(-6).map((row, index) => {
+                const status = row.high_severity_pct > 38 ? "risk" : row.high_severity_pct > 32 ? "warning" : "healthy";
+                return (
+                  <tr key={index} className="border-b border-border last:border-0">
+                    <td className="py-3 px-4 font-medium text-foreground">{row.month}</td>
+                    <td className="py-3 px-4 text-foreground">{row.control_failures}</td>
+                    <td className="py-3 px-4">
+                      <span className={row.high_severity_pct > 35 ? "text-status-risk" : "text-foreground"}>
+                        {row.high_severity_pct}%
+                      </span>
+                    </td>
+                    <td className="py-3 px-4 text-status-warning font-medium">${row.avg_financial_impact_usd}M</td>
+                    <td className="py-3 px-4"><StatusBadge status={status} /></td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
       {/* Risk Register Table */}
       <div className="bg-card p-6 rounded-lg border border-border">
         <h3 className="text-lg font-semibold text-foreground mb-6">Risk Register</h3>
@@ -186,13 +267,17 @@ const ControlFailuresDashboard = () => {
       <div className="bg-primary/5 p-6 rounded-lg border border-primary/20">
         <h3 className="text-lg font-semibold text-foreground mb-4">What This Means</h3>
         <p className="text-muted-foreground mb-4">
-          The current risk profile shows one medium-level concern in Liquidity driven by delayed 
-          settlements. While operational risk remains low due to stable processing volumes, 
-          the liquidity situation requires active monitoring to prevent escalation that could 
-          impact capital allocation decisions.
+          Control failures peaked at 23 in May (42% high severity) but have improved to 14 in December 
+          (29% high severity). The downward trend indicates remediation efforts are working. However, 
+          the liquidity risk from delayed settlements remains at medium level and requires continued 
+          monitoring to prevent escalation.
         </p>
         <h4 className="font-semibold text-foreground mb-2">Recommended Actions</h4>
         <ul className="space-y-2 text-muted-foreground">
+          <li className="flex items-start gap-2">
+            <span className="w-1.5 h-1.5 bg-primary rounded-full mt-2" />
+            Continue control remediation efforts — 39% reduction since May peak
+          </li>
           <li className="flex items-start gap-2">
             <span className="w-1.5 h-1.5 bg-primary rounded-full mt-2" />
             Increase monitoring frequency for clearing timeline metrics
@@ -200,10 +285,6 @@ const ControlFailuresDashboard = () => {
           <li className="flex items-start gap-2">
             <span className="w-1.5 h-1.5 bg-primary rounded-full mt-2" />
             Escalate to Treasury if settlement delays exceed 48 hours
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="w-1.5 h-1.5 bg-primary rounded-full mt-2" />
-            Maintain current operational controls given stable volumes
           </li>
         </ul>
       </div>

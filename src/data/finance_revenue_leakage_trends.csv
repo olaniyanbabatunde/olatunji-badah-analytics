@@ -1,0 +1,13 @@
+month,expected_revenue_usd,actual_revenue_usd,revenue_leakage_usd,leakage_rate_pct
+Jan,780,760,20,2.6
+Feb,800,770,30,3.8
+Mar,820,785,35,4.3
+Apr,840,810,30,3.6
+May,860,820,40,4.7
+Jun,880,850,30,3.4
+Jul,900,860,40,4.4
+Aug,910,870,40,4.4
+Sep,920,880,40,4.3
+Oct,940,900,40,4.2
+Nov,960,920,40,4.1
+Dec,980,930,50,5.1

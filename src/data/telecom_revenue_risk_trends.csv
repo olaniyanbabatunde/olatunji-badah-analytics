@@ -1,0 +1,13 @@
+month,region,expected_revenue_usd,actual_revenue_usd,revenue_at_risk_usd,leakage_rate_pct
+Jan,North,420,410,10,2.4
+Feb,North,430,415,15,3.5
+Mar,North,440,420,20,4.5
+Apr,North,450,430,20,4.4
+May,North,455,428,27,5.9
+Jun,North,460,440,20,4.3
+Jul,North,465,445,20,4.3
+Aug,North,470,448,22,4.7
+Sep,North,475,450,25,5.2
+Oct,North,480,460,20,4.1
+Nov,North,485,470,15,3.1
+Dec,North,490,472,18,3.7

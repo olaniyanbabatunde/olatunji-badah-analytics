@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Download, Moon, Sun } from "lucide-react";
+import { Menu, X, FileText, Moon, Sun, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Header = () => {
@@ -90,10 +90,16 @@ const Header = () => {
             >
               {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </Button>
+            <Button asChild variant="ghost" size="sm">
+              <a href="mailto:olatunji.badah@gmail.com">
+                <Mail className="h-4 w-4 mr-2" />
+                Contact
+              </a>
+            </Button>
             <Button asChild variant="default" size="sm">
-              <a href="/cv/olatunji_badah.pdf" download>
-                <Download className="h-4 w-4 mr-2" />
-                Download CV
+              <a href="/cv/olatunji_badah.pdf" target="_blank" rel="noopener noreferrer">
+                <FileText className="h-4 w-4 mr-2" />
+                View CV
               </a>
             </Button>
           </div>
@@ -140,12 +146,20 @@ const Header = () => {
                   {link.label}
                 </a>
               ))}
-              <Button asChild variant="default" size="sm" className="w-fit mt-2">
-                <a href="/cv/olatunji_badah.pdf" download>
-                  <Download className="h-4 w-4 mr-2" />
-                  Download CV
-                </a>
-              </Button>
+              <div className="flex flex-col gap-2 mt-2">
+                <Button asChild variant="ghost" size="sm" className="w-fit">
+                  <a href="mailto:olatunji.badah@gmail.com">
+                    <Mail className="h-4 w-4 mr-2" />
+                    Contact
+                  </a>
+                </Button>
+                <Button asChild variant="default" size="sm" className="w-fit">
+                  <a href="/cv/olatunji_badah.pdf" target="_blank" rel="noopener noreferrer">
+                    <FileText className="h-4 w-4 mr-2" />
+                    View CV (PDF)
+                  </a>
+                </Button>
+              </div>
             </nav>
           </div>
         )}

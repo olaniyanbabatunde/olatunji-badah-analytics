@@ -1,4 +1,4 @@
-import { Download, Mail, Linkedin, MapPin } from "lucide-react";
+import { FileText, Mail, Linkedin, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Footer = () => {
@@ -12,26 +12,27 @@ const Footer = () => {
               Olatunji Badah
             </h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Data Analyst specialising in performance intelligence, 
-              data governance, and customer experience.
+              Data Analyst turning complex data into clear decisions for 
+              performance, risk, and customer intelligence.
             </p>
             <Button asChild variant="outline" size="sm">
-              <a href="/cv/olatunji_badah.pdf" download>
-                <Download className="h-4 w-4 mr-2" />
-                Download CV
+              <a href="/cv/olatunji_badah.pdf" target="_blank" rel="noopener noreferrer">
+                <FileText className="h-4 w-4 mr-2" />
+                View CV (PDF)
               </a>
             </Button>
           </div>
 
-          {/* Industries */}
+          {/* Capabilities */}
           <div className="space-y-4">
             <h4 className="text-sm font-semibold text-foreground uppercase tracking-wider">
-              Industry Focus
+              Capabilities
             </h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>Telecommunications</li>
-              <li>Financial Services</li>
-              <li>Customer Experience</li>
+              <li>Performance Analytics</li>
+              <li>Risk & Data Quality</li>
+              <li>Customer Insights</li>
+              <li>Data Storytelling</li>
             </ul>
           </div>
 
