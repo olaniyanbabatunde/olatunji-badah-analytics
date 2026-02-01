@@ -38,29 +38,29 @@ const MetricCard = ({
   return (
     <div
       className={cn(
-        "metric-card cursor-pointer hover:border-primary/30",
+        "metric-card cursor-pointer",
         className
       )}
       onClick={onClick}
     >
       <div className="flex items-start justify-between mb-4">
-        <p className="text-sm font-medium text-muted-foreground">{title}</p>
+        <p className="text-sm font-medium text-muted-foreground leading-tight">{title}</p>
         {status && <StatusBadge status={status} />}
       </div>
 
-      <div className="flex items-baseline gap-1 mb-2">
-        <span className="text-3xl font-bold text-foreground">{value}</span>
-        {unit && <span className="text-lg text-muted-foreground">{unit}</span>}
+      <div className="flex items-baseline gap-1.5 mb-3">
+        <span className="text-3xl font-bold text-foreground tracking-tight">{value}</span>
+        {unit && <span className="text-lg text-muted-foreground font-medium">{unit}</span>}
       </div>
 
       <div className="flex items-center justify-between text-sm">
         {target !== undefined && (
           <span className="text-muted-foreground">
-            Target: {target}{unit}
+            Target: <span className="font-medium text-foreground/80">{target}{unit}</span>
           </span>
         )}
         {delta !== undefined && (
-          <span className={cn("flex items-center gap-1", getTrendColor())}>
+          <span className={cn("flex items-center gap-1.5 font-medium", getTrendColor())}>
             {getTrendIcon()}
             {delta > 0 ? "+" : ""}{delta}{unit || "%"} {deltaLabel || ""}
           </span>

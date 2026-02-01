@@ -26,12 +26,12 @@ const About = () => {
   ];
 
   return (
-    <section id="about" className="py-20 md:py-32 bg-secondary/30">
+    <section id="about" className="py-24 md:py-32 bg-secondary/40">
       <div className="section-container">
         <div className="max-w-4xl mx-auto">
           {/* Section header */}
           <div className="text-center mb-16">
-            <p className="text-sm font-medium text-primary uppercase tracking-wider mb-3">
+            <p className="text-sm font-medium text-primary uppercase tracking-widest mb-4">
               About
             </p>
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
@@ -44,20 +44,20 @@ const About = () => {
             </p>
           </div>
 
-          {/* Capability Cards */}
+          {/* Capability Cards - Premium styling */}
           <div className="mb-16">
-            <h3 className="text-xl font-semibold text-foreground mb-8 text-center">
+            <h3 className="text-lg font-semibold text-foreground mb-8 text-center">
               What I Deliver
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {capabilities.map((capability, index) => (
                 <div
                   key={index}
-                  className="bg-card p-6 rounded-lg border border-border hover:border-primary/50 transition-colors"
+                  className="group bg-card p-6 rounded-xl border border-border shadow-card hover:shadow-card-hover hover:border-primary/30 transition-all duration-300"
                 >
                   <div className="flex items-start gap-4">
-                    <div className="p-3 bg-primary/10 rounded-lg flex-shrink-0">
-                      <capability.icon className="h-6 w-6 text-primary" />
+                    <div className="p-3 bg-primary/8 rounded-lg flex-shrink-0 group-hover:bg-primary/12 transition-colors duration-300">
+                      <capability.icon className="h-5 w-5 text-primary" />
                     </div>
                     <div>
                       <h4 className="font-semibold text-foreground mb-2">
@@ -73,12 +73,12 @@ const About = () => {
             </div>
           </div>
 
-          {/* Approach Section */}
-          <div className="bg-card p-8 rounded-lg border border-border mb-12">
-            <h3 className="text-xl font-semibold text-foreground mb-4">
+          {/* Approach Section - Refined */}
+          <div className="bg-card p-8 rounded-xl border border-border shadow-card mb-12">
+            <h3 className="text-lg font-semibold text-foreground mb-5">
               How I Work
             </h3>
-            <div className="space-y-4 text-muted-foreground">
+            <div className="space-y-4 text-muted-foreground leading-relaxed">
               <p>
                 I approach analytics with a focus on clarity and business impact. Every metric 
                 should support a decision, and every dashboard should tell a story that stakeholders 
@@ -97,9 +97,9 @@ const About = () => {
             </div>
           </div>
 
-          {/* CV Link */}
+          {/* CV Link - Clean CTA */}
           <div className="text-center">
-            <p className="text-muted-foreground mb-4">
+            <p className="text-muted-foreground mb-5">
               For detailed work experience, education, and technical skills:
             </p>
             <Button asChild size="lg">
