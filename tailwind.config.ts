@@ -14,8 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        mono: ['JetBrains Mono', 'monospace'],
+        sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+        mono: ['JetBrains Mono', 'Menlo', 'monospace'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -73,6 +73,7 @@ export default {
         },
       },
       borderRadius: {
+        xl: "calc(var(--radius) + 4px)",
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
@@ -91,20 +92,29 @@ export default {
           to: { opacity: "1" },
         },
         "slide-up": {
-          from: { opacity: "0", transform: "translateY(20px)" },
+          from: { opacity: "0", transform: "translateY(16px)" },
           to: { opacity: "1", transform: "translateY(0)" },
+        },
+        "subtle-float": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-4px)" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "fade-in": "fade-in 0.5s ease-out forwards",
-        "slide-up": "slide-up 0.5s ease-out forwards",
+        "fade-in": "fade-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+        "slide-up": "slide-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+        "subtle-float": "subtle-float 4s ease-in-out infinite",
       },
       boxShadow: {
         'card': 'var(--card-shadow)',
         'card-hover': 'var(--card-shadow-hover)',
         'metric': 'var(--metric-glow)',
+        'button': 'var(--button-glow)',
+      },
+      transitionTimingFunction: {
+        'smooth': 'cubic-bezier(0.16, 1, 0.3, 1)',
       },
     },
   },

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, FileText, Moon, Sun, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -47,18 +48,19 @@ const Header = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={cn(
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
         isScrolled
-          ? "bg-background/95 backdrop-blur-md border-b border-border shadow-sm"
+          ? "bg-background/80 backdrop-blur-xl border-b border-border/50 shadow-sm"
           : "bg-transparent"
-      }`}
+      )}
     >
       <div className="section-container">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <Link
             to="/"
-            className="text-lg md:text-xl font-semibold text-foreground hover:text-primary transition-colors"
+            className="text-lg md:text-xl font-semibold text-foreground hover:text-primary transition-colors duration-200"
           >
             Olatunji Badah
           </Link>
@@ -69,11 +71,12 @@ const Header = () => {
               <a
                 key={link.href}
                 href={link.href}
-                className={`text-sm font-medium transition-colors ${
+                className={cn(
+                  "text-sm font-medium transition-colors duration-200",
                   isActive(link.href)
                     ? "text-primary"
                     : "text-muted-foreground hover:text-foreground"
-                }`}
+                )}
               >
                 {link.label}
               </a>
@@ -81,7 +84,7 @@ const Header = () => {
           </nav>
 
           {/* Desktop Actions */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden md:flex items-center gap-2">
             <Button
               variant="ghost"
               size="icon"
@@ -105,7 +108,7 @@ const Header = () => {
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="flex md:hidden items-center gap-2">
+          <div className="flex md:hidden items-center gap-1">
             <Button
               variant="ghost"
               size="icon"
@@ -120,9 +123,9 @@ const Header = () => {
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
               {isMobileMenuOpen ? (
-                <X className="h-6 w-6" />
+                <X className="h-5 w-5" />
               ) : (
-                <Menu className="h-6 w-6" />
+                <Menu className="h-5 w-5" />
               )}
             </Button>
           </div>
@@ -130,30 +133,31 @@ const Header = () => {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-border animate-fade-in">
-            <nav className="flex flex-col gap-4">
+          <div className="md:hidden py-4 border-t border-border/50 animate-fade-in">
+            <nav className="flex flex-col gap-1">
               {navLinks.map((link) => (
                 <a
                   key={link.href}
                   href={link.href}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className={`text-sm font-medium py-2 transition-colors ${
+                  className={cn(
+                    "text-sm font-medium py-3 px-2 rounded-lg transition-colors duration-200",
                     isActive(link.href)
-                      ? "text-primary"
-                      : "text-muted-foreground"
-                  }`}
+                      ? "text-primary bg-primary/5"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                  )}
                 >
                   {link.label}
                 </a>
               ))}
-              <div className="flex flex-col gap-2 mt-2">
-                <Button asChild variant="ghost" size="sm" className="w-fit">
+              <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-border/50">
+                <Button asChild variant="ghost" size="sm" className="justify-start">
                   <a href="mailto:olatunji.badah@gmail.com">
                     <Mail className="h-4 w-4 mr-2" />
                     Contact
                   </a>
                 </Button>
-                <Button asChild variant="default" size="sm" className="w-fit">
+                <Button asChild variant="default" size="sm" className="justify-start">
                   <a href="/cv/olatunji_badah.pdf" target="_blank" rel="noopener noreferrer">
                     <FileText className="h-4 w-4 mr-2" />
                     View CV (PDF)
