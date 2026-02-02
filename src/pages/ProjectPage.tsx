@@ -1,4 +1,4 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, Users, Target, AlertTriangle, CheckCircle } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -8,6 +8,8 @@ import RevenueRiskDashboard from "@/components/projects/RevenueRiskDashboard";
 import RevenueLeakageDashboard from "@/components/projects/RevenueLeakageDashboard";
 import ControlFailuresDashboard from "@/components/projects/ControlFailuresDashboard";
 import SupportRetentionDashboard from "@/components/projects/SupportRetentionDashboard";
+import PageTransition from "@/components/PageTransition";
+import { Button } from "@/components/ui/button";
 
 const dashboardComponents: Record<string, React.ComponentType> = {
   "telecom-network-billing": NetworkBillingDashboard,
@@ -19,7 +21,19 @@ const dashboardComponents: Record<string, React.ComponentType> = {
 
 const ProjectPage = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const project = getProjectById(id || "");
+
+  const handleBackToProjects = () => {
+    navigate("/#projects");
+    // Scroll to projects section after navigation
+    setTimeout(() => {
+      const projectsSection = document.getElementById("projects");
+      if (projectsSection) {
+        projectsSection.scrollIntoView({ behavior: "smooth" });
+      }
+    }, 100);
+  };
 
   if (!project) {
     return (
@@ -37,19 +51,21 @@ const ProjectPage = () => {
   const DashboardComponent = dashboardComponents[project.id];
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      <main className="pt-20">
-        {/* Breadcrumb */}
-        <div className="section-container py-6">
-          <Link
-            to="/#projects"
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to Projects
-          </Link>
-        </div>
+    <PageTransition>
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="pt-20">
+          {/* Breadcrumb */}
+          <div className="section-container py-6">
+            <Button
+              variant="ghost"
+              onClick={handleBackToProjects}
+              className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors px-0 hover:bg-transparent"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back to Projects
+            </Button>
+          </div>
 
         {/* Project Header */}
         <section className="section-container pb-12">
@@ -124,6 +140,7 @@ const ProjectPage = () => {
       </main>
       <Footer />
     </div>
+    </PageTransition>
   );
 };
 
