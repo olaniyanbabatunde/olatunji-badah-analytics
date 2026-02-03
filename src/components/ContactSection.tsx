@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, Variants } from "framer-motion";
-import { MessageCircle, Send, MapPin, Linkedin, CheckCircle } from "lucide-react";
+import { MessageCircle, Mail, Send, MapPin, Linkedin, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
 
 const WHATSAPP_NUMBER = "447943982963";
+const EMAIL_ADDRESS = "olatunji.badah@gmail.com";
 
 const contactSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100, "Name must be less than 100 characters"),
@@ -59,18 +60,27 @@ const ContactSection = () => {
 
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
+    // Prepare WhatsApp message
     const whatsappMessage = `Hi Olatunji,\n\nName: ${formData.name}\nEmail: ${formData.email}\nSubject: ${formData.subject}\n\nMessage:\n${formData.message}`;
     const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappMessage)}`;
+    
+    // Prepare email mailto link
+    const emailBody = `From: ${formData.name} (${formData.email})\n\n${formData.message}`;
+    const mailtoUrl = `mailto:${EMAIL_ADDRESS}?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(emailBody)}`;
     
     setIsSubmitting(false);
     setIsSubmitted(true);
     
     toast({
-      title: "Opening WhatsApp",
-      description: "You'll be redirected to WhatsApp to send your message.",
+      title: "Opening messaging apps",
+      description: "WhatsApp and your email client will open to send your message.",
     });
 
+    // Open both WhatsApp and email
     window.open(whatsappUrl, "_blank");
+    setTimeout(() => {
+      window.location.href = mailtoUrl;
+    }, 500);
 
     setTimeout(() => {
       setFormData({ name: "", email: "", subject: "", message: "" });
@@ -137,6 +147,20 @@ const ContactSection = () => {
                     <div>
                       <p className="text-sm text-muted-foreground">Location</p>
                       <p className="font-medium text-foreground">Belfast, UK</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <div className="p-3 bg-primary/8 rounded-lg">
+                      <Mail className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Email</p>
+                      <a 
+                        href={`mailto:${EMAIL_ADDRESS}`}
+                        className="font-medium text-foreground hover:text-primary transition-colors"
+                      >
+                        {EMAIL_ADDRESS}
+                      </a>
                     </div>
                   </div>
                   <div className="flex items-center gap-4">
