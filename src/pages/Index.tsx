@@ -3,6 +3,7 @@ import Footer from "@/components/Footer";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
 import ProjectsSection from "@/components/ProjectsSection";
+import TechStackSection from "@/components/TechStackSection";
 import ContactSection from "@/components/ContactSection";
 import PageTransition from "@/components/PageTransition";
 
@@ -13,8 +14,9 @@ const Index = () => {
         <Header />
         <main>
           <Hero />
-          <About />
           <ProjectsSection />
+          <TechStackSection />
+          <About />
           <ContactSection />
         </main>
         <Footer />
