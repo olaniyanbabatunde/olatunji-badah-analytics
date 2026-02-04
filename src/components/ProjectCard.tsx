@@ -51,7 +51,7 @@ const DashboardPreview = ({ industry }: { industry: Project["industry"] }) => {
 
   return (
     <svg
-      className="absolute inset-0 w-full h-full opacity-0 group-hover:opacity-[0.12] transition-opacity duration-300 ease-out"
+      className="absolute inset-0 w-full h-full opacity-0 group-hover:opacity-[0.20] transition-opacity duration-300 ease-out"
       viewBox="0 0 400 200"
       preserveAspectRatio="xMidYMid slice"
       style={{ filter: "blur(1px) saturate(0.6)" }}
@@ -129,9 +129,14 @@ const ProjectCard = ({ project, className }: ProjectCardProps) => {
           {project.title}
         </h3>
 
-        <p className="text-sm text-muted-foreground leading-relaxed">
+        <p className="text-sm text-muted-foreground leading-relaxed mb-3">
           {project.description}
         </p>
+
+        <span className="inline-flex items-center gap-1.5 text-xs font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          Click to view project
+          <ArrowRight className="h-3 w-3" />
+        </span>
       </div>
     </Link>
   );
