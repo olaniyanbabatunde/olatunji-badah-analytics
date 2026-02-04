@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, Variants } from "framer-motion";
-import { MessageCircle, Mail, Send, MapPin, Linkedin, CheckCircle } from "lucide-react";
+import { MessageCircle, Mail, Send, MapPin, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -146,7 +146,7 @@ const ContactSection = () => {
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground">Location</p>
-                      <p className="font-medium text-foreground">Belfast, UK</p>
+                      <p className="font-medium text-foreground">United Kingdom</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-4">
@@ -176,22 +176,6 @@ const ContactSection = () => {
                         className="font-medium text-foreground hover:text-primary transition-colors"
                       >
                         +44 7943 982963
-                      </a>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <div className="p-3 bg-primary/8 rounded-lg">
-                      <Linkedin className="h-5 w-5 text-primary" />
-                    </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground">LinkedIn</p>
-                      <a 
-                        href="https://linkedin.com/in/olattunjibadah" 
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="font-medium text-foreground hover:text-primary transition-colors"
-                      >
-                        Connect on LinkedIn
                       </a>
                     </div>
                   </div>

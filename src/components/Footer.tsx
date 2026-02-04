@@ -1,4 +1,4 @@
-import { FileText, Mail, Linkedin, MapPin } from "lucide-react";
+import { FileText, Mail, MapPin, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Footer = () => {
@@ -44,7 +44,7 @@ const Footer = () => {
             <ul className="space-y-3 text-sm text-muted-foreground">
               <li className="flex items-center gap-2">
                 <MapPin className="h-4 w-4 text-primary" />
-                Belfast, UK
+                United Kingdom
               </li>
               <li className="flex items-center gap-2">
                 <Mail className="h-4 w-4 text-primary" />
@@ -56,14 +56,14 @@ const Footer = () => {
                 </a>
               </li>
               <li className="flex items-center gap-2">
-                <Linkedin className="h-4 w-4 text-primary" />
+                <MessageCircle className="h-4 w-4 text-primary" />
                 <a
-                  href="https://linkedin.com/in/olattunjibadah"
+                  href="https://wa.me/447943982963"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-foreground transition-colors"
                 >
-                  LinkedIn Profile
+                  WhatsApp
                 </a>
               </li>
             </ul>
