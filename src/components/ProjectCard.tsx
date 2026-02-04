@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, BarChart3, Shield, Users, TrendingUp, PieChart, Activity } from "lucide-react";
+import { ArrowRight, BarChart3, Shield, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Project } from "@/lib/data";
 
@@ -19,70 +19,99 @@ const industryAccents = {
     border: "border-l-primary",
     iconBg: "bg-primary/8",
     iconColor: "text-primary",
-    previewBg: "from-primary/5 to-primary/10",
   },
   "financial-services": {
     border: "border-l-status-warning",
     iconBg: "bg-status-warning/10",
     iconColor: "text-status-warning",
-    previewBg: "from-status-warning/5 to-status-warning/10",
   },
   "customer-experience": {
     border: "border-l-status-healthy",
     iconBg: "bg-status-healthy/10",
     iconColor: "text-status-healthy",
-    previewBg: "from-status-healthy/5 to-status-healthy/10",
   },
 };
 
-// Preview icons for each project type
-const previewIcons = {
-  telecommunications: [BarChart3, TrendingUp, Activity],
-  "financial-services": [Shield, PieChart, TrendingUp],
-  "customer-experience": [Users, Activity, PieChart],
+// Dashboard preview SVG patterns for each industry
+const DashboardPreview = ({ industry }: { industry: Project["industry"] }) => {
+  const getPreviewColor = () => {
+    switch (industry) {
+      case "telecommunications":
+        return "hsl(var(--primary))";
+      case "financial-services":
+        return "hsl(var(--status-warning))";
+      case "customer-experience":
+        return "hsl(var(--status-healthy))";
+      default:
+        return "hsl(var(--primary))";
+    }
+  };
+
+  const color = getPreviewColor();
+
+  return (
+    <svg
+      className="absolute inset-0 w-full h-full opacity-0 group-hover:opacity-[0.12] transition-opacity duration-300 ease-out"
+      viewBox="0 0 400 200"
+      preserveAspectRatio="xMidYMid slice"
+      style={{ filter: "blur(1px) saturate(0.6)" }}
+    >
+      {/* KPI Tiles - top row */}
+      <rect x="20" y="20" width="80" height="45" rx="6" fill={color} opacity="0.3" />
+      <rect x="110" y="20" width="80" height="45" rx="6" fill={color} opacity="0.25" />
+      <rect x="200" y="20" width="80" height="45" rx="6" fill={color} opacity="0.2" />
+      <rect x="290" y="20" width="90" height="45" rx="6" fill={color} opacity="0.15" />
+
+      {/* Line chart area */}
+      <path
+        d="M30 120 Q60 100, 90 110 T150 95 T210 105 T270 85 T330 100 T380 90"
+        stroke={color}
+        strokeWidth="2.5"
+        fill="none"
+        opacity="0.4"
+      />
+      <path
+        d="M30 120 Q60 100, 90 110 T150 95 T210 105 T270 85 T330 100 T380 90 V180 H30 Z"
+        fill={color}
+        opacity="0.08"
+      />
+
+      {/* Bar chart silhouettes - bottom */}
+      <rect x="30" y="150" width="25" height="35" rx="3" fill={color} opacity="0.25" />
+      <rect x="65" y="140" width="25" height="45" rx="3" fill={color} opacity="0.3" />
+      <rect x="100" y="155" width="25" height="30" rx="3" fill={color} opacity="0.2" />
+      <rect x="135" y="135" width="25" height="50" rx="3" fill={color} opacity="0.35" />
+      <rect x="170" y="145" width="25" height="40" rx="3" fill={color} opacity="0.25" />
+      <rect x="205" y="160" width="25" height="25" rx="3" fill={color} opacity="0.2" />
+      <rect x="240" y="130" width="25" height="55" rx="3" fill={color} opacity="0.3" />
+      <rect x="275" y="150" width="25" height="35" rx="3" fill={color} opacity="0.25" />
+
+      {/* Small metric indicators */}
+      <circle cx="320" cy="140" r="20" fill={color} opacity="0.15" />
+      <circle cx="360" cy="160" r="15" fill={color} opacity="0.12" />
+    </svg>
+  );
 };
 
 const ProjectCard = ({ project, className }: ProjectCardProps) => {
   const Icon = industryIcons[project.industry];
   const accent = industryAccents[project.industry];
-  const PreviewIcons = previewIcons[project.industry];
 
   return (
     <Link
       to={`/project/${project.id}`}
       className={cn(
-        "group relative block bg-card p-6 rounded-xl border border-border border-l-4 shadow-card transition-all duration-300 ease-out overflow-hidden",
-        "hover:shadow-card-hover hover:border-primary/20 hover:-translate-y-0.5",
+        "group relative block bg-card p-6 rounded-xl border border-border border-l-4 transition-all duration-200 ease-out overflow-hidden",
+        "shadow-card hover:shadow-card-hover hover:-translate-y-0.5",
+        "focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 focus:ring-offset-background",
         accent.border,
         className
       )}
     >
-      {/* Hover preview background */}
-      <div 
-        className={cn(
-          "absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-500",
-          accent.previewBg
-        )}
-      />
-      
-      {/* Decorative preview icons - appear on hover */}
-      <div className="absolute top-4 right-4 flex gap-3 opacity-0 group-hover:opacity-20 transition-all duration-500 blur-[1px]">
-        {PreviewIcons.map((PreviewIcon, idx) => (
-          <PreviewIcon 
-            key={idx} 
-            className={cn(
-              "h-8 w-8 transition-all duration-500",
-              accent.iconColor
-            )}
-            style={{
-              transitionDelay: `${idx * 50}ms`,
-              transform: `translateY(${idx % 2 === 0 ? '-2px' : '2px'})`,
-            }}
-          />
-        ))}
-      </div>
+      {/* Dashboard preview - fades in on hover */}
+      <DashboardPreview industry={project.industry} />
 
-      {/* Content */}
+      {/* Content - always dominant */}
       <div className="relative z-10">
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-2.5">
@@ -93,10 +122,10 @@ const ProjectCard = ({ project, className }: ProjectCardProps) => {
               {project.industryLabel}
             </span>
           </div>
-          <ArrowRight className="h-4 w-4 text-muted-foreground/50 group-hover:text-primary group-hover:translate-x-1 transition-all duration-300" />
+          <ArrowRight className="h-4 w-4 text-muted-foreground/50 group-hover:text-primary group-hover:translate-x-1 transition-all duration-200" />
         </div>
 
-        <h3 className="text-lg font-semibold text-foreground mb-2 group-hover:text-primary transition-colors duration-300">
+        <h3 className="text-lg font-semibold text-foreground mb-2 group-hover:text-primary transition-colors duration-200">
           {project.title}
         </h3>
 
