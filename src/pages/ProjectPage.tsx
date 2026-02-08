@@ -1,5 +1,5 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, Users, Target, AlertTriangle, CheckCircle } from "lucide-react";
+import { ArrowLeft, Users, Target, AlertTriangle } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { getProjectById } from "@/lib/data";
@@ -8,6 +8,8 @@ import RevenueRiskDashboard from "@/components/projects/RevenueRiskDashboard";
 import RevenueLeakageDashboard from "@/components/projects/RevenueLeakageDashboard";
 import ControlFailuresDashboard from "@/components/projects/ControlFailuresDashboard";
 import SupportRetentionDashboard from "@/components/projects/SupportRetentionDashboard";
+import TechnicalProofSection from "@/components/projects/TechnicalProofSection";
+import BusinessImpactSection from "@/components/projects/BusinessImpactSection";
 import PageTransition from "@/components/PageTransition";
 import { Button } from "@/components/ui/button";
 
@@ -26,7 +28,6 @@ const ProjectPage = () => {
 
   const handleBackToProjects = () => {
     navigate("/#projects");
-    // Scroll to projects section after navigation
     setTimeout(() => {
       const projectsSection = document.getElementById("projects");
       if (projectsSection) {
@@ -67,27 +68,23 @@ const ProjectPage = () => {
             </Button>
           </div>
 
-        {/* Project Header */}
-        <section className="section-container pb-12">
-          <div className="max-w-4xl">
-            <div className="flex items-center gap-2 text-sm font-medium text-primary uppercase tracking-wider mb-4">
-              {project.industryLabel}
+          {/* Section A: Executive Summary */}
+          <section className="section-container pb-12">
+            <div className="max-w-4xl">
+              <div className="flex items-center gap-2 text-sm font-medium text-primary uppercase tracking-wider mb-4">
+                {project.industryLabel}
+              </div>
+              <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
+                {project.title}
+              </h1>
+              <p className="text-lg text-muted-foreground mb-8">
+                {project.description}
+              </p>
             </div>
-            <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
-              {project.title}
-            </h1>
-            <p className="text-lg text-muted-foreground">
-              {project.description}
-            </p>
-          </div>
-        </section>
 
-        {/* Business Context */}
-        <section className="bg-secondary/30 py-12">
-          <div className="section-container">
-            <h2 className="text-xl font-semibold text-foreground mb-8">Business Context</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-card p-6 rounded-lg border border-border">
+            {/* Business Context Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+              <div className="bg-card p-6 rounded-xl border border-border">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="p-2 bg-status-warning-bg rounded-lg">
                     <AlertTriangle className="h-5 w-5 text-status-warning" />
@@ -97,7 +94,7 @@ const ProjectPage = () => {
                 <p className="text-muted-foreground">{project.businessProblem}</p>
               </div>
 
-              <div className="bg-card p-6 rounded-lg border border-border">
+              <div className="bg-card p-6 rounded-xl border border-border">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="p-2 bg-primary/10 rounded-lg">
                     <Users className="h-5 w-5 text-primary" />
@@ -107,7 +104,7 @@ const ProjectPage = () => {
                 <p className="text-muted-foreground">{project.audience}</p>
               </div>
 
-              <div className="bg-card p-6 rounded-lg border border-border">
+              <div className="bg-card p-6 rounded-xl border border-border">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="p-2 bg-status-healthy-bg rounded-lg">
                     <Target className="h-5 w-5 text-status-healthy" />
@@ -117,7 +114,7 @@ const ProjectPage = () => {
                 <p className="text-muted-foreground">{project.decisionSupported}</p>
               </div>
 
-              <div className="bg-card p-6 rounded-lg border border-border">
+              <div className="bg-card p-6 rounded-xl border border-border">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="p-2 bg-status-risk-bg rounded-lg">
                     <AlertTriangle className="h-5 w-5 text-status-risk" />
@@ -127,19 +124,24 @@ const ProjectPage = () => {
                 <p className="text-muted-foreground">{project.riskOfIgnoring}</p>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
 
-        {/* Dashboard */}
-        <section className="py-12">
-          <div className="section-container">
-            <h2 className="text-xl font-semibold text-foreground mb-8">Performance Dashboard</h2>
-            {DashboardComponent && <DashboardComponent />}
-          </div>
-        </section>
-      </main>
-      <Footer />
-    </div>
+          {/* Performance Dashboard */}
+          <section className="py-12 bg-secondary/30">
+            <div className="section-container">
+              <h2 className="text-xl font-semibold text-foreground mb-8">Performance Dashboard</h2>
+              {DashboardComponent && <DashboardComponent />}
+            </div>
+          </section>
+
+          {/* Section B: Technical Proof */}
+          <TechnicalProofSection projectId={project.id} />
+
+          {/* Section C: Business Impact */}
+          <BusinessImpactSection projectId={project.id} />
+        </main>
+        <Footer />
+      </div>
     </PageTransition>
   );
 };
