@@ -129,14 +129,9 @@ const ProjectCard = ({ project, className }: ProjectCardProps) => {
           {project.title}
         </h3>
 
-        <p className="text-sm text-muted-foreground leading-relaxed mb-3">
+        <p className="text-sm text-muted-foreground leading-relaxed">
           {project.description}
         </p>
-
-        <span className="inline-flex items-center gap-1.5 text-xs font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-          Click to view project
-          <ArrowRight className="h-3 w-3" />
-        </span>
       </div>
     </Link>
   );
