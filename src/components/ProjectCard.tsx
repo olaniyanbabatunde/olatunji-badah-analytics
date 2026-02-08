@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, BarChart3, Shield, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Project } from "@/lib/data";
+import ProjectMiniCards from "./projects/ProjectMiniCards";
 
 interface ProjectCardProps {
   project: Project;
@@ -51,7 +52,7 @@ const DashboardPreview = ({ industry }: { industry: Project["industry"] }) => {
 
   return (
     <svg
-      className="absolute inset-0 w-full h-full opacity-0 group-hover:opacity-[0.20] transition-opacity duration-300 ease-out"
+      className="absolute inset-0 w-full h-full opacity-0 group-hover:opacity-[0.20] transition-opacity duration-300 ease-out pointer-events-none"
       viewBox="0 0 400 200"
       preserveAspectRatio="xMidYMid slice"
       style={{ filter: "blur(1px) saturate(0.6)" }}
@@ -98,12 +99,10 @@ const ProjectCard = ({ project, className }: ProjectCardProps) => {
   const accent = industryAccents[project.industry];
 
   return (
-    <Link
-      to={`/project/${project.id}`}
+    <div
       className={cn(
-        "group relative block bg-card p-6 rounded-xl border border-border border-l-4 transition-all duration-200 ease-out overflow-hidden",
-        "shadow-card hover:shadow-card-hover hover:-translate-y-0.5",
-        "focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 focus:ring-offset-background",
+        "group relative bg-card p-6 rounded-xl border border-border border-l-4 transition-all duration-200 ease-out overflow-hidden",
+        "shadow-card hover:shadow-card-hover",
         accent.border,
         className
       )}
@@ -122,18 +121,27 @@ const ProjectCard = ({ project, className }: ProjectCardProps) => {
               {project.industryLabel}
             </span>
           </div>
-          <ArrowRight className="h-4 w-4 text-muted-foreground/50 group-hover:text-primary group-hover:translate-x-1 transition-all duration-200" />
         </div>
 
-        <h3 className="text-lg font-semibold text-foreground mb-2 group-hover:text-primary transition-colors duration-200">
-          {project.title}
-        </h3>
+        {/* Clickable title link to project page */}
+        <Link
+          to={`/project/${project.id}`}
+          className="block group/title focus:outline-none focus:ring-2 focus:ring-primary/50 rounded"
+        >
+          <h3 className="text-lg font-semibold text-foreground mb-2 group-hover/title:text-primary transition-colors duration-200 flex items-center gap-2">
+            {project.title}
+            <ArrowRight className="h-4 w-4 text-muted-foreground/50 group-hover/title:text-primary group-hover/title:translate-x-1 transition-all duration-200" />
+          </h3>
+        </Link>
 
-        <p className="text-sm text-muted-foreground leading-relaxed">
+        <p className="text-sm text-muted-foreground leading-relaxed mb-1">
           {project.description}
         </p>
+
+        {/* Mini-cards for Dashboard, Raw Data, Cleaned Queries, Tools */}
+        <ProjectMiniCards projectId={project.id} projectTitle={project.title} />
       </div>
-    </Link>
+    </div>
   );
 };
 
