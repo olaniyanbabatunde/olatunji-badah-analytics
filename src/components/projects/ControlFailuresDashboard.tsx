@@ -22,7 +22,6 @@ const ControlFailuresDashboard = () => {
   const highRisks = financeRiskData.filter((r) => r.risk_level === "high").length;
   const totalRisks = financeRiskData.length;
 
-  // Calculate totals from trend data
   const totalFailures = financeControlFailureTrends.reduce((sum, d) => sum + d.control_failures, 0);
   const currentMonth = financeControlFailureTrends[financeControlFailureTrends.length - 1];
   const previousMonth = financeControlFailureTrends[financeControlFailureTrends.length - 2];
@@ -30,154 +29,69 @@ const ControlFailuresDashboard = () => {
 
   const getRiskIcon = (level: string) => {
     switch (level) {
-      case "high":
-        return <AlertTriangle className="h-5 w-5 text-status-risk" />;
-      case "medium":
-        return <Info className="h-5 w-5 text-status-warning" />;
-      default:
-        return <CheckCircle className="h-5 w-5 text-status-healthy" />;
+      case "high": return <AlertTriangle className="h-5 w-5 text-status-risk" />;
+      case "medium": return <Info className="h-5 w-5 text-status-warning" />;
+      default: return <CheckCircle className="h-5 w-5 text-status-healthy" />;
     }
   };
 
   const getRiskBorderColor = (level: string) => {
     switch (level) {
-      case "high":
-        return "border-l-status-risk";
-      case "medium":
-        return "border-l-status-warning";
-      default:
-        return "border-l-status-healthy";
+      case "high": return "border-l-status-risk";
+      case "medium": return "border-l-status-warning";
+      default: return "border-l-status-healthy";
     }
   };
 
   return (
     <div className="space-y-8">
-      {/* Executive KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <MetricCard
-          title="YTD Control Failures"
-          value={totalFailures}
-          status="warning"
-        />
-        <MetricCard
-          title="Dec Failures"
-          value={currentMonth.control_failures}
-          delta={failureDelta}
-          deltaLabel="vs Nov"
-          status={failureDelta > 0 ? "warning" : "healthy"}
-        />
-        <MetricCard
-          title="High Severity %"
-          value={currentMonth.high_severity_pct}
-          unit="%"
-          status={currentMonth.high_severity_pct > 35 ? "risk" : "warning"}
-        />
-        <MetricCard
-          title="Avg Financial Impact"
-          value={`$${currentMonth.avg_financial_impact_usd}M`}
-          status="warning"
-        />
+        <MetricCard title="YTD Control Failures" value={totalFailures} status="warning" />
+        <MetricCard title="Dec Failures" value={currentMonth.control_failures} delta={failureDelta} deltaLabel="vs Nov" status={failureDelta > 0 ? "warning" : "healthy"} />
+        <MetricCard title="High Severity %" value={currentMonth.high_severity_pct} unit="%" status={currentMonth.high_severity_pct > 35 ? "risk" : "warning"} />
+        <MetricCard title="Avg Financial Impact" value={`£${currentMonth.avg_financial_impact_usd}M`} status="warning" />
       </div>
 
-      {/* Control Failure Trend - from new dataset */}
       <div className="bg-card p-6 rounded-lg border border-border">
-        <h3 className="text-lg font-semibold text-foreground mb-2">
-          Control Failure Trend
-        </h3>
-        <p className="text-sm text-muted-foreground mb-6">
-          Monthly failures and severity distribution
-        </p>
+        <h3 className="text-lg font-semibold text-foreground mb-2">Control Failure Trend</h3>
+        <p className="text-sm text-muted-foreground mb-6">Monthly failures and severity distribution</p>
         <div className="h-64">
           <ResponsiveContainer width="100%" height="100%">
             <ComposedChart data={financeControlFailureTrends}>
               <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
               <XAxis dataKey="month" className="text-muted-foreground text-xs" />
-              <YAxis
-                yAxisId="left"
-                className="text-muted-foreground text-xs"
-              />
-              <YAxis
-                yAxisId="right"
-                orientation="right"
-                className="text-muted-foreground text-xs"
-                tickFormatter={(v) => `${v}%`}
-              />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "hsl(var(--card))",
-                  border: "1px solid hsl(var(--border))",
-                  borderRadius: "0.5rem",
-                }}
-              />
+              <YAxis yAxisId="left" className="text-muted-foreground text-xs" />
+              <YAxis yAxisId="right" orientation="right" className="text-muted-foreground text-xs" tickFormatter={(v) => `${v}%`} />
+              <Tooltip contentStyle={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: "0.5rem" }} />
               <Legend />
-              <Bar
-                yAxisId="left"
-                dataKey="control_failures"
-                name="Control Failures"
-                fill="hsl(var(--primary))"
-                radius={[4, 4, 0, 0]}
-              />
-              <Line
-                yAxisId="right"
-                type="monotone"
-                dataKey="high_severity_pct"
-                name="High Severity %"
-                stroke="hsl(var(--status-risk))"
-                strokeWidth={2}
-                dot={{ fill: "hsl(var(--status-risk))", strokeWidth: 2, r: 3 }}
-              />
+              <Bar yAxisId="left" dataKey="control_failures" name="Control Failures" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
+              <Line yAxisId="right" type="monotone" dataKey="high_severity_pct" name="High Severity %" stroke="hsl(var(--status-risk))" strokeWidth={2} dot={{ fill: "hsl(var(--status-risk))", strokeWidth: 2, r: 3 }} />
             </ComposedChart>
           </ResponsiveContainer>
         </div>
       </div>
 
-      {/* Financial Impact Trend */}
       <div className="bg-card p-6 rounded-lg border border-border">
-        <h3 className="text-lg font-semibold text-foreground mb-2">
-          Financial Impact Trend
-        </h3>
-        <p className="text-sm text-muted-foreground mb-6">
-          Average financial impact per control failure ($M)
-        </p>
+        <h3 className="text-lg font-semibold text-foreground mb-2">Financial Impact Trend</h3>
+        <p className="text-sm text-muted-foreground mb-6">Average financial impact per control failure (£M)</p>
         <div className="h-48">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={financeControlFailureTrends}>
               <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
               <XAxis dataKey="month" className="text-muted-foreground text-xs" />
-              <YAxis
-                className="text-muted-foreground text-xs"
-                tickFormatter={(v) => `$${v}M`}
-                domain={[1, 2]}
-              />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "hsl(var(--card))",
-                  border: "1px solid hsl(var(--border))",
-                  borderRadius: "0.5rem",
-                }}
-                formatter={(value: number) => [`$${value}M`, "Avg Impact"]}
-              />
-              <Area
-                type="monotone"
-                dataKey="avg_financial_impact_usd"
-                fill="hsl(var(--status-warning) / 0.2)"
-                stroke="hsl(var(--status-warning))"
-                strokeWidth={2}
-              />
+              <YAxis className="text-muted-foreground text-xs" tickFormatter={(v) => `£${v}M`} domain={[1, 2]} />
+              <Tooltip contentStyle={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: "0.5rem" }} formatter={(value: number) => [`£${value}M`, "Avg Impact"]} />
+              <Area type="monotone" dataKey="avg_financial_impact_usd" fill="hsl(var(--status-warning) / 0.2)" stroke="hsl(var(--status-warning))" strokeWidth={2} />
             </LineChart>
           </ResponsiveContainer>
         </div>
       </div>
 
-      {/* Active Risk Cards */}
       <div>
         <h3 className="text-lg font-semibold text-foreground mb-4">Active Risk Items</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {financeRiskData.map((risk, index) => (
-            <div
-              key={index}
-              className={`bg-card p-6 rounded-lg border-l-4 ${getRiskBorderColor(risk.risk_level)} border border-border`}
-            >
+            <div key={index} className={`bg-card p-6 rounded-lg border-l-4 ${getRiskBorderColor(risk.risk_level)} border border-border`}>
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-3">
                   {getRiskIcon(risk.risk_level)}
@@ -200,7 +114,6 @@ const ControlFailuresDashboard = () => {
         </div>
       </div>
 
-      {/* Control Failure Details Table */}
       <div className="bg-card p-6 rounded-lg border border-border">
         <h3 className="text-lg font-semibold text-foreground mb-6">Monthly Control Failure Details</h3>
         <div className="overflow-x-auto">
@@ -226,7 +139,7 @@ const ControlFailuresDashboard = () => {
                         {row.high_severity_pct}%
                       </span>
                     </td>
-                    <td className="py-3 px-4 text-status-warning font-medium">${row.avg_financial_impact_usd}M</td>
+                    <td className="py-3 px-4 text-status-warning font-medium">£{row.avg_financial_impact_usd}M</td>
                     <td className="py-3 px-4"><StatusBadge status={status} /></td>
                   </tr>
                 );
@@ -236,7 +149,6 @@ const ControlFailuresDashboard = () => {
         </div>
       </div>
 
-      {/* Risk Register Table */}
       <div className="bg-card p-6 rounded-lg border border-border">
         <h3 className="text-lg font-semibold text-foreground mb-6">Risk Register</h3>
         <div className="overflow-x-auto">
@@ -263,7 +175,6 @@ const ControlFailuresDashboard = () => {
         </div>
       </div>
 
-      {/* Executive Summary */}
       <div className="bg-primary/5 p-6 rounded-lg border border-primary/20">
         <h3 className="text-lg font-semibold text-foreground mb-4">What This Means</h3>
         <p className="text-muted-foreground mb-4">

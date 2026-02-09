@@ -1,6 +1,5 @@
 import { motion, Variants } from "framer-motion";
-import { FileText, TrendingUp, Shield, Users, BarChart3 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { TrendingUp, Shield, Users, BarChart3 } from "lucide-react";
 
 const About = () => {
   const capabilities = [
@@ -143,20 +142,6 @@ const About = () => {
             </div>
           </motion.div>
 
-          {/* CV Link */}
-          <motion.div variants={itemVariants} className="text-center">
-            <p className="text-muted-foreground mb-5">
-              For detailed work experience, education, and technical skills:
-            </p>
-            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <Button asChild size="lg" className="shadow-lg shadow-primary/20">
-                <a href="/cv/olatunji_badah.pdf" target="_blank" rel="noopener noreferrer">
-                  <FileText className="h-4 w-4 mr-2" />
-                  View Full CV (PDF)
-                </a>
-              </Button>
-            </motion.div>
-          </motion.div>
         </motion.div>
       </div>
     </section>

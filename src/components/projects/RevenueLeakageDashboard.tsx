@@ -24,13 +24,11 @@ const RevenueLeakageDashboard = () => {
 
   const issueCount = financeDataQualityData.filter(d => d.quality_status === "fair").length;
   
-  // Calculate totals from trend data
   const totalLeakage = financeRevenueLeakageTrends.reduce((sum, d) => sum + d.revenue_leakage_usd, 0);
   const currentMonth = financeRevenueLeakageTrends[financeRevenueLeakageTrends.length - 1];
   const previousMonth = financeRevenueLeakageTrends[financeRevenueLeakageTrends.length - 2];
   const leakageDelta = currentMonth.revenue_leakage_usd - previousMonth.revenue_leakage_usd;
 
-  // Quality dimension comparison
   const qualityDimensions = financeDataQualityData.map(d => ({
     dataset: d.dataset_name.replace("_", " "),
     completeness: d.completeness_pct,
@@ -42,168 +40,71 @@ const RevenueLeakageDashboard = () => {
 
   return (
     <div className="space-y-8">
-      {/* Executive KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <MetricCard
-          title="YTD Revenue Leakage"
-          value={`$${totalLeakage}k`}
-          status="risk"
-        />
-        <MetricCard
-          title="Dec Leakage"
-          value={`$${currentMonth.revenue_leakage_usd}k`}
-          delta={leakageDelta}
-          deltaLabel="vs Nov"
-          status={leakageDelta > 0 ? "risk" : "healthy"}
-        />
-        <MetricCard
-          title="Leakage Rate (Dec)"
-          value={currentMonth.leakage_rate_pct.toFixed(1)}
-          unit="%"
-          target={3}
-          status={currentMonth.leakage_rate_pct > 4 ? "risk" : "warning"}
-        />
-        <MetricCard
-          title="Avg Trust Score"
-          value={avgTrustScore}
-          unit="/100"
-          target={98}
-          status="warning"
-        />
+        <MetricCard title="YTD Revenue Leakage" value={`£${totalLeakage}k`} status="risk" />
+        <MetricCard title="Dec Leakage" value={`£${currentMonth.revenue_leakage_usd}k`} delta={leakageDelta} deltaLabel="vs Nov" status={leakageDelta > 0 ? "risk" : "healthy"} />
+        <MetricCard title="Leakage Rate (Dec)" value={currentMonth.leakage_rate_pct.toFixed(1)} unit="%" target={3} status={currentMonth.leakage_rate_pct > 4 ? "risk" : "warning"} />
+        <MetricCard title="Avg Trust Score" value={avgTrustScore} unit="/100" target={98} status="warning" />
       </div>
 
-      {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Revenue Leakage Trend - from new dataset */}
         <div className="bg-card p-6 rounded-lg border border-border">
-          <h3 className="text-lg font-semibold text-foreground mb-2">
-            Revenue Leakage Trend
-          </h3>
-          <p className="text-sm text-muted-foreground mb-6">
-            Monthly leakage and rate
-          </p>
+          <h3 className="text-lg font-semibold text-foreground mb-2">Revenue Leakage Trend</h3>
+          <p className="text-sm text-muted-foreground mb-6">Monthly leakage and rate</p>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <ComposedChart data={financeRevenueLeakageTrends}>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
                 <XAxis dataKey="month" className="text-muted-foreground text-xs" />
-                <YAxis
-                  yAxisId="left"
-                  className="text-muted-foreground text-xs"
-                  tickFormatter={(v) => `$${v}k`}
-                />
-                <YAxis
-                  yAxisId="right"
-                  orientation="right"
-                  className="text-muted-foreground text-xs"
-                  tickFormatter={(v) => `${v}%`}
-                />
+                <YAxis yAxisId="left" className="text-muted-foreground text-xs" tickFormatter={(v) => `£${v}k`} />
+                <YAxis yAxisId="right" orientation="right" className="text-muted-foreground text-xs" tickFormatter={(v) => `${v}%`} />
                 <Tooltip
-                  contentStyle={{
-                    backgroundColor: "hsl(var(--card))",
-                    border: "1px solid hsl(var(--border))",
-                    borderRadius: "0.5rem",
-                  }}
+                  contentStyle={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: "0.5rem" }}
                   formatter={(value: number, name: string) => {
-                    if (name === "Leakage") return [`$${value}k`, name];
+                    if (name === "Leakage") return [`£${value}k`, name];
                     return [`${value}%`, name];
                   }}
                 />
                 <Legend />
-                <Area
-                  yAxisId="left"
-                  type="monotone"
-                  dataKey="revenue_leakage_usd"
-                  name="Leakage"
-                  fill="hsl(var(--status-risk) / 0.2)"
-                  stroke="hsl(var(--status-risk))"
-                  strokeWidth={2}
-                />
-                <Line
-                  yAxisId="right"
-                  type="monotone"
-                  dataKey="leakage_rate_pct"
-                  name="Leakage Rate %"
-                  stroke="hsl(var(--status-warning))"
-                  strokeWidth={2}
-                  dot={{ fill: "hsl(var(--status-warning))", strokeWidth: 2, r: 3 }}
-                />
+                <Area yAxisId="left" type="monotone" dataKey="revenue_leakage_usd" name="Leakage" fill="hsl(var(--status-risk) / 0.2)" stroke="hsl(var(--status-risk))" strokeWidth={2} />
+                <Line yAxisId="right" type="monotone" dataKey="leakage_rate_pct" name="Leakage Rate %" stroke="hsl(var(--status-warning))" strokeWidth={2} dot={{ fill: "hsl(var(--status-warning))", strokeWidth: 2, r: 3 }} />
               </ComposedChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        {/* Expected vs Actual Revenue */}
         <div className="bg-card p-6 rounded-lg border border-border">
-          <h3 className="text-lg font-semibold text-foreground mb-2">
-            Expected vs Actual Revenue
-          </h3>
-          <p className="text-sm text-muted-foreground mb-6">
-            Monthly revenue comparison
-          </p>
+          <h3 className="text-lg font-semibold text-foreground mb-2">Expected vs Actual Revenue</h3>
+          <p className="text-sm text-muted-foreground mb-6">Monthly revenue comparison</p>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={financeRevenueLeakageTrends}>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
                 <XAxis dataKey="month" className="text-muted-foreground text-xs" />
-                <YAxis
-                  className="text-muted-foreground text-xs"
-                  tickFormatter={(v) => `$${v}k`}
-                  domain={[700, 1000]}
-                />
+                <YAxis className="text-muted-foreground text-xs" tickFormatter={(v) => `£${v}k`} domain={[700, 1000]} />
                 <Tooltip
-                  contentStyle={{
-                    backgroundColor: "hsl(var(--card))",
-                    border: "1px solid hsl(var(--border))",
-                    borderRadius: "0.5rem",
-                  }}
-                  formatter={(value: number) => [`$${value}k`]}
+                  contentStyle={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: "0.5rem" }}
+                  formatter={(value: number) => [`£${value}k`]}
                 />
                 <Legend />
-                <Line
-                  type="monotone"
-                  dataKey="expected_revenue_usd"
-                  name="Expected"
-                  stroke="hsl(var(--status-healthy))"
-                  strokeWidth={2}
-                  strokeDasharray="5 5"
-                  dot={false}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="actual_revenue_usd"
-                  name="Actual"
-                  stroke="hsl(var(--primary))"
-                  strokeWidth={2}
-                  dot={{ fill: "hsl(var(--primary))", strokeWidth: 2, r: 3 }}
-                />
+                <Line type="monotone" dataKey="expected_revenue_usd" name="Expected" stroke="hsl(var(--status-healthy))" strokeWidth={2} strokeDasharray="5 5" dot={false} />
+                <Line type="monotone" dataKey="actual_revenue_usd" name="Actual" stroke="hsl(var(--primary))" strokeWidth={2} dot={{ fill: "hsl(var(--primary))", strokeWidth: 2, r: 3 }} />
               </LineChart>
             </ResponsiveContainer>
           </div>
         </div>
       </div>
 
-      {/* Trust Score by Dataset */}
       <div className="bg-card p-6 rounded-lg border border-border">
-        <h3 className="text-lg font-semibold text-foreground mb-2">
-          Data Quality Dimensions
-        </h3>
-        <p className="text-sm text-muted-foreground mb-6">
-          Completeness, validity, and timeliness scores by dataset
-        </p>
+        <h3 className="text-lg font-semibold text-foreground mb-2">Data Quality Dimensions</h3>
+        <p className="text-sm text-muted-foreground mb-6">Completeness, validity, and timeliness scores by dataset</p>
         <div className="h-48">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={qualityDimensions} layout="vertical">
               <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
               <XAxis type="number" domain={[80, 100]} className="text-muted-foreground text-xs" />
               <YAxis type="category" dataKey="dataset" className="text-muted-foreground text-xs" width={100} />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "hsl(var(--card))",
-                  border: "1px solid hsl(var(--border))",
-                  borderRadius: "0.5rem",
-                }}
-              />
+              <Tooltip contentStyle={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: "0.5rem" }} />
               <Legend />
               <Bar dataKey="completeness" name="Completeness" fill="hsl(var(--status-healthy))" />
               <Bar dataKey="validity" name="Validity" fill="hsl(var(--primary))" />
@@ -213,7 +114,6 @@ const RevenueLeakageDashboard = () => {
         </div>
       </div>
 
-      {/* Revenue Leakage Summary Table */}
       <div className="bg-card p-6 rounded-lg border border-border">
         <h3 className="text-lg font-semibold text-foreground mb-6">Monthly Revenue Leakage Details</h3>
         <div className="overflow-x-auto">
@@ -234,9 +134,9 @@ const RevenueLeakageDashboard = () => {
                 return (
                   <tr key={index} className="border-b border-border last:border-0">
                     <td className="py-3 px-4 font-medium text-foreground">{row.month}</td>
-                    <td className="py-3 px-4 text-foreground">${row.expected_revenue_usd}k</td>
-                    <td className="py-3 px-4 text-foreground">${row.actual_revenue_usd}k</td>
-                    <td className="py-3 px-4 text-status-risk font-medium">${row.revenue_leakage_usd}k</td>
+                    <td className="py-3 px-4 text-foreground">£{row.expected_revenue_usd}k</td>
+                    <td className="py-3 px-4 text-foreground">£{row.actual_revenue_usd}k</td>
+                    <td className="py-3 px-4 text-status-risk font-medium">£{row.revenue_leakage_usd}k</td>
                     <td className="py-3 px-4 text-muted-foreground">{row.leakage_rate_pct}%</td>
                     <td className="py-3 px-4"><StatusBadge status={status} /></td>
                   </tr>
@@ -247,7 +147,6 @@ const RevenueLeakageDashboard = () => {
         </div>
       </div>
 
-      {/* Data Quality Summary Table */}
       <div className="bg-card p-6 rounded-lg border border-border">
         <h3 className="text-lg font-semibold text-foreground mb-6">Data Quality Summary</h3>
         <div className="overflow-x-auto">
@@ -282,12 +181,11 @@ const RevenueLeakageDashboard = () => {
         </div>
       </div>
 
-      {/* Executive Summary */}
       <div className="bg-primary/5 p-6 rounded-lg border border-primary/20">
         <h3 className="text-lg font-semibold text-foreground mb-4">What This Means</h3>
         <p className="text-muted-foreground mb-4">
-          Year-to-date revenue leakage totals ${totalLeakage}k, with December showing the highest 
-          monthly loss at $50k (5.1% leakage rate). The upward trend in leakage rate since September 
+          Year-to-date revenue leakage totals £{totalLeakage}k, with December showing the highest 
+          monthly loss at £50k (5.1% leakage rate). The upward trend in leakage rate since September 
           requires attention. Data quality issues in the transactions dataset (timeliness score: 88) 
           correlate with reconciliation delays contributing to leakage.
         </p>
@@ -295,7 +193,7 @@ const RevenueLeakageDashboard = () => {
         <ul className="space-y-2 text-muted-foreground">
           <li className="flex items-start gap-2">
             <span className="w-1.5 h-1.5 bg-primary rounded-full mt-2" />
-            Investigate December spike — $50k leakage is highest of the year
+            Investigate December spike — £50k leakage is highest of the year
           </li>
           <li className="flex items-start gap-2">
             <span className="w-1.5 h-1.5 bg-primary rounded-full mt-2" />
