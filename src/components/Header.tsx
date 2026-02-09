@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, FileText, Moon, Sun, Mail } from "lucide-react";
+import { Menu, X, Moon, Sun, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -99,12 +99,6 @@ const Header = () => {
                 Contact
               </a>
             </Button>
-            <Button asChild variant="default" size="sm">
-              <a href="/cv/olatunji_badah.pdf" target="_blank" rel="noopener noreferrer">
-                <FileText className="h-4 w-4 mr-2" />
-                View CV
-              </a>
-            </Button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -155,12 +149,6 @@ const Header = () => {
                   <a href="mailto:olatunji.badah@gmail.com">
                     <Mail className="h-4 w-4 mr-2" />
                     Contact
-                  </a>
-                </Button>
-                <Button asChild variant="default" size="sm" className="justify-start">
-                  <a href="/cv/olatunji_badah.pdf" target="_blank" rel="noopener noreferrer">
-                    <FileText className="h-4 w-4 mr-2" />
-                    View CV (PDF)
                   </a>
                 </Button>
               </div>

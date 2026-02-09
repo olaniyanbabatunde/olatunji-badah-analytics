@@ -1,5 +1,4 @@
-import { FileText, Mail, MapPin, MessageCircle } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Mail, MapPin, MessageCircle } from "lucide-react";
 
 const Footer = () => {
   return (
@@ -15,12 +14,6 @@ const Footer = () => {
               Data Analyst turning complex data into clear decisions for 
               performance, risk, and customer intelligence.
             </p>
-            <Button asChild variant="outline" size="sm">
-              <a href="/cv/olatunji_badah.pdf" target="_blank" rel="noopener noreferrer">
-                <FileText className="h-4 w-4 mr-2" />
-                View CV (PDF)
-              </a>
-            </Button>
           </div>
 
           {/* Capabilities */}

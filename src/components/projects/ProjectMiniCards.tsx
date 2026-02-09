@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Database, Sparkles, Wrench, BarChart3 } from "lucide-react";
 import {
   Tooltip,
@@ -7,7 +8,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { RawDataModal, CleanedDataModal, ToolsModal, DashboardPreviewModal } from "./ProjectProofModals";
+import { CleanedDataModal, ToolsModal } from "./ProjectProofModals";
 
 interface ProjectMiniCardsProps {
   projectId: string;
@@ -15,10 +16,9 @@ interface ProjectMiniCardsProps {
 }
 
 const ProjectMiniCards = ({ projectId, projectTitle }: ProjectMiniCardsProps) => {
-  const [rawDataOpen, setRawDataOpen] = useState(false);
   const [cleanedDataOpen, setCleanedDataOpen] = useState(false);
   const [toolsOpen, setToolsOpen] = useState(false);
-  const [dashboardOpen, setDashboardOpen] = useState(false);
+  const navigate = useNavigate();
 
   const miniCards = [
     {
@@ -29,7 +29,7 @@ const ProjectMiniCards = ({ projectId, projectTitle }: ProjectMiniCardsProps) =>
       onClick: (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
-        setDashboardOpen(true);
+        navigate(`/project/${projectId}`);
       },
       color: "text-primary",
       bgColor: "bg-primary/8 hover:bg-primary/15",
@@ -38,11 +38,11 @@ const ProjectMiniCards = ({ projectId, projectTitle }: ProjectMiniCardsProps) =>
       id: "raw-data",
       label: "Raw Data",
       icon: Database,
-      tooltip: "Raw SQL extracts from source systems before cleaning",
+      tooltip: "Raw CSV datasets from source systems",
       onClick: (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
-        setRawDataOpen(true);
+        navigate(`/project/${projectId}/raw-data`);
       },
       color: "text-status-warning",
       bgColor: "bg-status-warning/10 hover:bg-status-warning/20",
@@ -107,11 +107,6 @@ const ProjectMiniCards = ({ projectId, projectTitle }: ProjectMiniCardsProps) =>
       </TooltipProvider>
 
       {/* Modals */}
-      <RawDataModal 
-        open={rawDataOpen} 
-        onOpenChange={setRawDataOpen} 
-        projectId={projectId}
-      />
       <CleanedDataModal 
         open={cleanedDataOpen} 
         onOpenChange={setCleanedDataOpen} 
@@ -119,12 +114,8 @@ const ProjectMiniCards = ({ projectId, projectTitle }: ProjectMiniCardsProps) =>
       />
       <ToolsModal 
         open={toolsOpen} 
-        onOpenChange={setToolsOpen} 
-      />
-      <DashboardPreviewModal 
-        open={dashboardOpen} 
-        onOpenChange={setDashboardOpen}
-        projectTitle={projectTitle}
+        onOpenChange={setToolsOpen}
+        projectId={projectId}
       />
     </>
   );
