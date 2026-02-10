@@ -422,36 +422,36 @@ FROM funnel_events;`,
 };
 
 // Tools used — varied per project
-const toolsByProject: Record<string, { name: string; icon: typeof Database; description: string }[]> = {
+const toolsByProject: Record<string, { name: string; icon: typeof Database; description: string; url: string }[]> = {
   "telecom-network-billing": [
-    { name: "PostgreSQL", icon: Database, description: "Data extraction & aggregation from network monitoring systems" },
-    { name: "Python", icon: Code, description: "pandas for automated KPI calculations and anomaly detection" },
-    { name: "Power BI", icon: PieChart, description: "Executive dashboard with regional drilldowns and SLA tracking" },
-    { name: "Excel", icon: FileSpreadsheet, description: "Ad-hoc SLA compliance checks and regional comparisons" },
+    { name: "PostgreSQL", icon: Database, description: "Data extraction & aggregation from network monitoring systems", url: "https://www.postgresql.org/" },
+    { name: "Python", icon: Code, description: "pandas for automated KPI calculations and anomaly detection", url: "https://www.python.org/" },
+    { name: "Power BI", icon: PieChart, description: "Executive dashboard with regional drilldowns and SLA tracking", url: "https://app.powerbi.com/" },
+    { name: "Excel", icon: FileSpreadsheet, description: "Ad-hoc SLA compliance checks and regional comparisons", url: "https://www.microsoft.com/en-gb/microsoft-365/excel" },
   ],
   "telecom-revenue-risk": [
-    { name: "PostgreSQL", icon: Database, description: "Revenue extraction and billing error aggregation queries" },
-    { name: "Python (pandas)", icon: Code, description: "Account-level risk scoring and currency normalisation" },
-    { name: "Power BI", icon: PieChart, description: "Revenue risk dashboards with error trend visualisation" },
-    { name: "DAX", icon: Layers, description: "Custom DAX measures for leakage rate calculations in Power BI" },
+    { name: "PostgreSQL", icon: Database, description: "Revenue extraction and billing error aggregation queries", url: "https://www.postgresql.org/" },
+    { name: "Python (pandas)", icon: Code, description: "Account-level risk scoring and currency normalisation", url: "https://www.python.org/" },
+    { name: "Power BI", icon: PieChart, description: "Revenue risk dashboards with error trend visualisation", url: "https://app.powerbi.com/" },
+    { name: "DAX", icon: Layers, description: "Custom DAX measures for leakage rate calculations in Power BI", url: "https://learn.microsoft.com/en-us/dax/" },
   ],
   "finance-revenue-leakage": [
-    { name: "T-SQL", icon: Database, description: "Core banking data extraction via SQL Server stored procedures" },
-    { name: "Excel (Power Query)", icon: FileSpreadsheet, description: "Batch reconciliation and duplicate detection workflows" },
-    { name: "Power BI", icon: PieChart, description: "Revenue leakage monitoring with data quality overlays" },
-    { name: "Python", icon: Code, description: "Automated validation scripts for orphaned transaction detection" },
+    { name: "T-SQL", icon: Database, description: "Core banking data extraction via SQL Server stored procedures", url: "https://learn.microsoft.com/en-us/sql/t-sql/language-reference" },
+    { name: "Excel (Power Query)", icon: FileSpreadsheet, description: "Batch reconciliation and duplicate detection workflows", url: "https://www.microsoft.com/en-gb/microsoft-365/excel" },
+    { name: "Power BI", icon: PieChart, description: "Revenue leakage monitoring with data quality overlays", url: "https://app.powerbi.com/" },
+    { name: "Python", icon: Code, description: "Automated validation scripts for orphaned transaction detection", url: "https://www.python.org/" },
   ],
   "finance-control-failures": [
-    { name: "T-SQL", icon: Database, description: "Risk register queries from Microsoft SQL Server environment" },
-    { name: "Power BI", icon: PieChart, description: "Control effectiveness dashboards for board-level reporting" },
-    { name: "Excel", icon: FileSpreadsheet, description: "Manual control testing documentation and evidence tracking" },
-    { name: "SharePoint", icon: Layers, description: "Risk register management and control owner assignment workflows" },
+    { name: "T-SQL", icon: Database, description: "Risk register queries from Microsoft SQL Server environment", url: "https://learn.microsoft.com/en-us/sql/t-sql/language-reference" },
+    { name: "Power BI", icon: PieChart, description: "Control effectiveness dashboards for board-level reporting", url: "https://app.powerbi.com/" },
+    { name: "Excel", icon: FileSpreadsheet, description: "Manual control testing documentation and evidence tracking", url: "https://www.microsoft.com/en-gb/microsoft-365/excel" },
+    { name: "SharePoint", icon: Layers, description: "Risk register management and control owner assignment workflows", url: "https://www.microsoft.com/en-gb/microsoft-365/sharepoint/collaboration" },
   ],
   "cx-support-retention": [
-    { name: "PostgreSQL", icon: Database, description: "Customer event extraction and funnel query construction" },
-    { name: "Python (pandas)", icon: Code, description: "Churn feature engineering, cohort analysis, and data cleaning" },
-    { name: "Power BI", icon: PieChart, description: "Customer journey dashboards with retention curve visualisation" },
-    { name: "Jupyter Notebook", icon: LineChart, description: "Exploratory analysis of churn drivers and retention patterns" },
+    { name: "PostgreSQL", icon: Database, description: "Customer event extraction and funnel query construction", url: "https://www.postgresql.org/" },
+    { name: "Python (pandas)", icon: Code, description: "Churn feature engineering, cohort analysis, and data cleaning", url: "https://www.python.org/" },
+    { name: "Power BI", icon: PieChart, description: "Customer journey dashboards with retention curve visualisation", url: "https://app.powerbi.com/" },
+    { name: "Jupyter Notebook", icon: LineChart, description: "Exploratory analysis of churn drivers and retention patterns", url: "https://jupyter.org/" },
   ],
 };
 
@@ -571,12 +571,18 @@ export const ToolsModal = ({ open, onOpenChange, projectId }: ToolsModalProps) =
             {tools.map((tool) => (
               <Tooltip key={tool.name}>
                 <TooltipTrigger asChild>
-                  <div className="flex items-center gap-3 p-3 rounded-lg border border-border bg-muted/30 hover:bg-muted/50 transition-colors cursor-help">
+                  <a
+                    href={tool.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-3 p-3 rounded-lg border border-border bg-muted/30 hover:bg-muted/50 hover:border-primary/30 transition-colors cursor-pointer group"
+                  >
                     <div className="p-2 rounded-md bg-primary/10">
                       <tool.icon className="h-4 w-4 text-primary" />
                     </div>
-                    <span className="font-medium text-sm">{tool.name}</span>
-                  </div>
+                    <span className="font-medium text-sm flex-1">{tool.name}</span>
+                    <ExternalLink className="h-3.5 w-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </a>
                 </TooltipTrigger>
                 <TooltipContent side="bottom" className="max-w-[220px]">
                   <p>{tool.description}</p>

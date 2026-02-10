@@ -1,5 +1,5 @@
 import { motion, Variants } from "framer-motion";
-import { ArrowDown, FileText, BarChart3, Shield, Users, TrendingUp, Mail } from "lucide-react";
+import { ArrowDown, BarChart3, Shield, Users, TrendingUp, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Hero = () => {
@@ -149,14 +149,6 @@ const Hero = () => {
               <Button asChild size="lg" className="min-w-[180px] shadow-lg shadow-primary/20">
                 <a href="#projects">
                   View Projects
-                </a>
-              </Button>
-            </motion.div>
-            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <Button asChild variant="outline" size="lg" className="min-w-[180px]">
-                <a href="/cv/olatunji_badah.pdf" target="_blank" rel="noopener noreferrer">
-                  <FileText className="h-4 w-4 mr-2" />
-                  View CV (PDF)
                 </a>
               </Button>
             </motion.div>
