@@ -5,7 +5,6 @@ interface TechSkill {
   name: string;
   label: string;
   icon: typeof Database;
-  highlights: string[];
 }
 
 const techStack: TechSkill[] = [
@@ -13,37 +12,31 @@ const techStack: TechSkill[] = [
     name: "SQL & Database Querying",
     label: "Extensive production use",
     icon: Database,
-    highlights: ["PostgreSQL", "T-SQL", "CTEs & window functions", "Performance tuning"],
   },
   {
     name: "Python (Pandas, NumPy)",
     label: "Regular analytical work",
     icon: Code,
-    highlights: ["Data cleaning", "Feature engineering", "Automated pipelines", "Jupyter notebooks"],
   },
   {
     name: "Power BI / Tableau",
     label: "Daily executive reporting",
     icon: PieChart,
-    highlights: ["DAX measures", "Interactive dashboards", "Row-level security", "Scheduled refresh"],
   },
   {
     name: "Excel & Advanced Formulas",
     label: "Extensive production use",
     icon: FileSpreadsheet,
-    highlights: ["Power Query M", "Pivot tables", "Reconciliation", "Data validation"],
   },
   {
     name: "Data Quality & Validation",
     label: "Regular analytical work",
     icon: CheckCircle2,
-    highlights: ["Deduplication", "Null handling", "Schema validation", "Audit trails"],
   },
   {
     name: "Statistical Analysis",
     label: "Regular analytical work",
     icon: BarChart3,
-    highlights: ["Trend analysis", "Cohort modelling", "Variance analysis", "Forecasting"],
   },
 ];
 
@@ -106,7 +99,7 @@ const TechStackSection = () => {
                 whileHover={{ y: -4 }}
                 className="group relative rounded-xl border border-border bg-card p-6 transition-all duration-300 hover:shadow-card-hover hover:border-primary/30"
               >
-                <div className="flex items-start gap-4 mb-4">
+                <div className="flex items-center gap-4">
                   <div className="p-2.5 rounded-lg bg-primary/10 text-primary group-hover:bg-primary/15 transition-colors">
                     <skill.icon className="h-5 w-5" />
                   </div>
@@ -117,24 +110,9 @@ const TechStackSection = () => {
                     <p className="text-xs text-muted-foreground mt-1">{skill.label}</p>
                   </div>
                 </div>
-                <ul className="space-y-1.5">
-                  {skill.highlights.map((h) => (
-                    <li key={h} className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <span className="h-1 w-1 rounded-full bg-primary/60 shrink-0" />
-                      {h}
-                    </li>
-                  ))}
-                </ul>
               </motion.div>
             ))}
           </motion.div>
-
-          <motion.p
-            variants={itemVariants}
-            className="text-sm text-muted-foreground text-center mt-10"
-          >
-            Proficiency reflects practical usage depth in real-world projects, not rankings.
-          </motion.p>
         </motion.div>
       </div>
     </section>
