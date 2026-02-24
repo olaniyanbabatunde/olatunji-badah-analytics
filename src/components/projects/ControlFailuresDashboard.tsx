@@ -76,13 +76,13 @@ const ControlFailuresDashboard = () => {
         <p className="text-sm text-muted-foreground mb-6">Average financial impact per control failure (£M)</p>
         <div className="h-48">
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={financeControlFailureTrends}>
+            <ComposedChart data={financeControlFailureTrends}>
               <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
               <XAxis dataKey="month" className="text-muted-foreground text-xs" />
               <YAxis className="text-muted-foreground text-xs" tickFormatter={(v) => `£${v}M`} domain={[1, 2]} />
               <Tooltip contentStyle={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: "0.5rem" }} formatter={(value: number) => [`£${value}M`, "Avg Impact"]} />
               <Area type="monotone" dataKey="avg_financial_impact_usd" fill="hsl(var(--status-warning) / 0.2)" stroke="hsl(var(--status-warning))" strokeWidth={2} />
-            </LineChart>
+            </ComposedChart>
           </ResponsiveContainer>
         </div>
       </div>
